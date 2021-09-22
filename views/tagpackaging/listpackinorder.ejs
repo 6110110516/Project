@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Package list</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body class="container" style="margin-top: 20px;">
+
+    <!-- <% if (messages.error) { %>
+        <div class="alert alert-danger" role="alert"><%= messages.error %></div>
+    <% } %> -->
+
+    <% if (messages.error) { %>
+        <div class="alert alert-danger" role="alert"><%= messages.error %></div>
+    <% } %>
+    
+    
+
+    <div class="card">
+        <div class="card-header">
+            <%include ../tabmenu/menu %>
+            <ul class="nav-link">Package list</ul>
+        </div>
+        <div class="card-body">
+            <% if(data.length) { %>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <!-- <th scope="col">#</th> -->
+                            <th scope="col">Package ID</th>
+                            <th scope="col">UID tag </th>
+                            <th scope="col">Start date </th>
+                            <th scope="col">Finish date</th>
+                            <th scope="col">จำนวนปู</th>
+                            <th scope="col">status</th>
+                            <!-- <th width="400px"></th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 0; i < data.length; i++) { %>
+                            <tr>
+                                <th  scope="row"><a href="/data"><%= data[i].pack_id %></a></th>
+                                <td><%= data[i].uid %></td>
+                                <td><%= moment(data[i].start_date).format('Do MMMM, YYYY'); %></td>
+                                <td><%= moment(data[i].finish_date).format('Do MMMM, YYYY'); %></td>
+                                <td><%= data[i].amount_crab %></td>
+                                <% if(data[i].statu == 0) {%>
+                                <td> 
+                                    <a class="btn btn-info">กำลังจัดเตรียม</a>
+                                </td>
+                                <%} else if(data[i].statu == 1) {%>
+                                <td> 
+                                    <a class="btn btn-warning">กำลังดำเนินการ</a>
+                                </td>
+                                <%} else if(data[i].statu == 2) {%>
+                                <td> 
+                                    <a class="btn btn-success">เสร็จสิ้น</a>
+                                </td>
+                                <%} else {%>
+                                <td> 
+                                    <a class="btn btn-secondary"></a>
+                                </td>
+                                <% }%>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            <% } %>
+
+            <!-- if result is empty -->
+            <% if(!data.length) { %>
+                <p class="text-center">No Order found!</p>
+            <% } %>
+        </div>
+    </div>
+
+</body>
+</html>
