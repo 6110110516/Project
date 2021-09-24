@@ -73,10 +73,10 @@
             <ul class="nav nav-pills w-100">
                 <% if(data.length) { %>
                 <li class="nav-link">
-                    <a href="../data/crabmolt?crab_id=<%= data[0].crab_id %>" onclick="return confirm('Are you sure?')" class="btn btn-success ">สิ้นสุดการเลี้ยง</a>
+                    <a href="../data/packfinish?pack_id=<%= data[0].pack_id %>" onclick="return confirm('Are you sure?')" class="btn btn-success ">ปิดกล่อง</a>
                 </li>
                 <li class="nav-link">
-                    <a href="../data/deletecrab?uid=<%= data[0].uid %>" class="btn btn-danger delete">Delete</a>
+                    <a href="../data/deletepacklist?pack_id=<%= data[0].pack_id %>" onclick="return confirm('Are you sure?')" class="btn btn-danger delete">Delete</a>
                 </li>
                 <% } %>
                 <% if(!data.length) { %>

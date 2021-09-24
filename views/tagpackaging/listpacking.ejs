@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Package list</title>
+    <title>Packaging list</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
@@ -17,8 +17,6 @@
     <% if (messages.error) { %>
         <div class="alert alert-danger" role="alert"><%= messages.error %></div>
     <% } %>
-    
-    
 
     <div class="card">
         <div class="card-header">
@@ -36,7 +34,6 @@
                             <th scope="col">Start date </th>
                             <th scope="col">Finish date</th>
                             <th scope="col">จำนวนปู</th>
-                            <th scope="col">order id</th>
                             <th scope="col">status</th>
                             <!-- <th width="400px"></th> -->
                         </tr>
@@ -49,14 +46,13 @@
                                 <td><%= moment(data[i].start_date).format('Do MMMM, YYYY'); %></td>
                                 <td><%= moment(data[i].finish_date).format('Do MMMM, YYYY'); %></td>
                                 <td><%= data[i].amount_crab %></td>
-                                <td><%= data[i].order_id %></td>
                                 <% if(data[i].statu == 0) {%>
                                 <td> 
-                                    <a class="btn btn-info">กำลังจัดเตรียม</a>
+                                    <a href="../data/packing?pack_id=<%= data[i].pack_id %>&crab_id=<%= crab_id %>" onclick="return confirm('Are you sure?')" class="btn btn-info">เลือกกล่องบรรจุ</a>
                                 </td>
                                 <%} else if(data[i].statu == 1) {%>
                                 <td> 
-                                    <a  href="../data/listordering?pack_id=<%= data[i].pack_id %>" class="btn btn-warning">กำลังดำเนินการ</a>
+                                    <a class="btn btn-warning">กำลังดำเนินการ</a>
                                 </td>
                                 <%} else if(data[i].statu == 2) {%>
                                 <td> 

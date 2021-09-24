@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Package list</title>
+    <title>Ordering list</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
@@ -23,7 +23,7 @@
     <div class="card">
         <div class="card-header">
             <%include ../tabmenu/menu %>
-            <ul class="nav-link">Package list</ul>
+            <ul class="nav-link">Order list</ul>
         </div>
         <div class="card-body">
             <% if(data.length) { %>
@@ -31,42 +31,40 @@
                     <thead>
                         <tr>
                             <!-- <th scope="col">#</th> -->
-                            <th scope="col">Package ID</th>
-                            <th scope="col">UID tag </th>
+                            <th scope="col">Order ID</th>
                             <th scope="col">Start date </th>
                             <th scope="col">Finish date</th>
-                            <th scope="col">จำนวนปู</th>
-                            <th scope="col">order id</th>
-                            <th scope="col">status</th>
+                            <th scope="col">จำนวนกล่อง</th>
+                            <th scope="col">สถานะ</th>
                             <!-- <th width="400px"></th> -->
                         </tr>
                     </thead>
                     <tbody>
                         <% for(let i = 0; i < data.length; i++) { %>
                             <tr>
-                                <th  scope="row"><a href="/data/listcrabinp?pack_id=<%= data[i].pack_id %>"><%= data[i].pack_id %></a></th>
-                                <td><%= data[i].uid %></td>
+                                <th scope="row"><a href="/data/listpackino?order_id=<%= data[i].order_id%>"><%= data[i].order_id %></a></th>
                                 <td><%= moment(data[i].start_date).format('Do MMMM, YYYY'); %></td>
                                 <td><%= moment(data[i].finish_date).format('Do MMMM, YYYY'); %></td>
-                                <td><%= data[i].amount_crab %></td>
-                                <td><%= data[i].order_id %></td>
+                                <td><%= data[i].pack_amount %></td>
                                 <% if(data[i].statu == 0) {%>
-                                <td> 
-                                    <a class="btn btn-info">กำลังจัดเตรียม</a>
-                                </td>
-                                <%} else if(data[i].statu == 1) {%>
-                                <td> 
-                                    <a  href="../data/listordering?pack_id=<%= data[i].pack_id %>" class="btn btn-warning">กำลังดำเนินการ</a>
-                                </td>
-                                <%} else if(data[i].statu == 2) {%>
-                                <td> 
-                                    <a class="btn btn-success">เสร็จสิ้น</a>
-                                </td>
-                                <%} else {%>
-                                <td> 
-                                    <a class="btn btn-secondary"></a>
-                                </td>
-                                <% }%>
+                                    <td> 
+                                        <a href="../data/ordering?order_id=<%= data[i].order_id %>&pack_id=<%= pack_id %>" onclick="return confirm('Are you sure?')" class="btn btn-info">กำลังจัดเตรียม</a>
+                                    </td>
+                                    <%} else if(data[i].statu == 1) {%>
+                                    <td> 
+                                        <a class="btn btn-warning">กำลังดำเนินการ</a>
+                                    </td>
+                                    <%} else if(data[i].statu == 2) {%>
+                                    <td> 
+                                        <a class="btn btn-success">เสร็จสิ้น</a>
+                                    </td>
+                                    <%} else {%>
+                                    <td> 
+                                        <a class="btn btn-secondary"></a>
+                                    </td>
+                                    <% }%>
+
+                                
                             </tr>
                         <% } %>
                     </tbody>

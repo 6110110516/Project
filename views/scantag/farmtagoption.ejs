@@ -54,6 +54,21 @@
                         <th scope="row">Molt date</th>
                         <td><%= moment(data[0].molt_date).format('Do MMMM, YYYY'); %></td>
                     </tr>
+                    <tr>
+                        <th scope="row">status</th>
+                        <td>
+                            <% if(data[0].statu == 0) {%>
+                                    <a class="btn btn-info">กำลังเลี้ยง</a>
+                                <%} else if(data[0].statu == 1) {%>
+                                    <a class="btn btn-success">รอบรรจุ</a>                                                                 
+                                <%} else if(data[0].statu == 2) {%>   
+                                    <a class="btn btn-success">บรรจุแล้ว</a>                         
+                                <%} else {%>                               
+                                    <a class="btn btn-secondary"></a>         
+                                <% }%>
+                        </td>
+
+                    </tr>
                    
                     <!-- <th width="400px"></th> -->
                     
@@ -68,10 +83,13 @@
             <ul class="nav nav-pills w-100">
                 <% if(data.length) { %>
                 <li class="nav-link">
-                    <a href="../data/crabmolt?crab_id=<%= data[0].crab_id %>" onclick="return confirm('Are you sure?')" class="btn btn-success ">สิ้นสุดการเลี้ยง</a>
+                    <a href="../data/crabmolt?crab_id=<%= data[0].crab_id %>&c=0" onclick="return confirm('Are you sure?')" class="btn btn-success ">สิ้นสุดการเลี้ยง</a>
                 </li>
                 <li class="nav-link">
-                    <a href="../data/deletecrab?uid=<%= data[0].uid %>" class="btn btn-danger delete">Delete</a>
+                    <a href="../data/crabmolt?crab_id=<%= data[0].crab_id %>&c=1" onclick="return confirm('Are you sure?')" class="btn btn-success ">สิ้นสุดการเลี้ยงและบรรจุลงกล่อง</a>
+                </li>
+                <li class="nav-link">
+                    <a href="../data/deletecrablist?crab_id=<%= data[0].crab_id %>" onclick="return confirm('Are you sure?')" class="btn btn-danger delete">Delete</a>
                 </li>
                 <% } %>
                 <% if(!data.length) { %>
