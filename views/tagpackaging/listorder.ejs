@@ -23,7 +23,8 @@
     <div class="card">
         <div class="card-header">
             <%include ../tabmenu/menu %>
-            <ul class="nav-link">Order list</ul>
+            <ul class="nav-link">Order list</ul><br>
+
         </div>
         <div class="card-body">
             <% if(data.length) { %>
@@ -64,17 +65,12 @@
                                     </td>
                                     <% }%>
 
-                                <td> 
-                                    <!-- <a href="../tagpack/checkorder/<%= data[i].order_id_temp %>" class="btn btn-success edit">Check order</a> -->
-                                    <!-- <a href="../books/delete/<%= data[i].id %>" onclick="return alert('Are you sure?')" class="btn btn-danger delete">Delete</a> -->
-                                </td>
                             </tr>
-                        <% } %>
+                        <% } %>                   
                     </tbody>
-                </table>
             <% } %>
-
-            <!-- if result is empty -->
+            </table> 
+            <center><a href="/data/createorder" class="btn btn-success">สร้างออเดอร์</a></center>
             <% if(!data.length) { %>
                 <p class="text-center">No Order found!</p>
             <% } %>

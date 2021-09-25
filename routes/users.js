@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 
   try {
       res.render('users/menu',{
-        pack_id: req.query.pack_id,
+        order_id: req.query.order_id,
       })
   } catch(e){
       next(e);
@@ -19,15 +19,15 @@ router.get('/', function(req, res, next) {
 
 
 router.post('/check',(req, res, next) => {
-  let pack_id = req.body.pack_id;
+  let order_id = req.body.order_id;
   let errors = false;
-  if (req.query.pack_id != null){
+  if (req.query.order_id != null){
     errors = true;
-    pack_id = req.query.pack_id;
+    order_id = req.query.order_id;
   }
 
-  if (pack_id.length === 0) {
-    pack_id = 0;
+  if (order_id.length === 0) {
+    order_id = 0;
     errors = true;
     // set flash message
     req.flash('error', 'Please enter UID');
@@ -35,14 +35,13 @@ router.post('/check',(req, res, next) => {
     res.redirect('/users');
 }
   if(!errors){
-    pack_id = pack_id;
-    dbCon.query('SELECT * FROM order_packaging WHERE pack_id = ?',pack_id, (err, rows) => {
+    dbCon.query('SELECT * FROM order_list WHERE order_id = ?',order_id, (err, rows) => {
       if (err) {
           req.flash('error', err);
-          res.render('users/checkbyid', { pack_id: pack_id ,data: '' , moment: moment});
+          res.render('users/checkbyid', { order_id: order_id ,data: '' , moment: moment});
       }else{
           
-          res.render('users/checkbyid', { pack_id: pack_id, data: rows , moment: moment});
+          res.render('users/checkbyid', { order_id: order_id, data: rows , moment: moment});
       }
     }) 
   }

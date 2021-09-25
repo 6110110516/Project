@@ -48,7 +48,7 @@
                                 <td><%= data[i].pack_amount %></td>
                                 <% if(data[i].statu == 0) {%>
                                     <td> 
-                                        <a href="../data/ordering?order_id=<%= data[i].order_id %>&pack_id=<%= pack_id %>" onclick="return confirm('Are you sure?')" class="btn btn-info">กำลังจัดเตรียม</a>
+                                        <a href="../data/ordering?order_id=<%= data[i].order_id %>&pack_id=<%= pack_id %>" onclick="return confirm('Are you sure?')" class="btn btn-info">เลือกออเดอร์</a>
                                     </td>
                                     <%} else if(data[i].statu == 1) {%>
                                     <td> 
@@ -71,7 +71,7 @@
                 </table>
             <% } %>
 
-            <!-- if result is empty -->
+            <center><a href="/data/createorder" class="btn btn-success">สร้างออเดอร์</a></center>
             <% if(!data.length) { %>
                 <p class="text-center">No Order found!</p>
             <% } %>

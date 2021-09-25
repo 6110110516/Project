@@ -24,6 +24,8 @@
         <div class="card-header">
             <%include ../tabmenu/menu %>
             <ul class="nav-link">Package list</ul>
+            <ul class="nav-link">Order ID : <%=order_id %></ul>
+
         </div>
         <div class="card-body">
             <% if(data.length) { %>
@@ -43,7 +45,7 @@
                     <tbody>
                         <% for(let i = 0; i < data.length; i++) { %>
                             <tr>
-                                <th  scope="row"><a href="/data"><%= data[i].pack_id %></a></th>
+                                <th  scope="row"><a href="/data/listcrabinp?pack_id=<%= data[i].pack_id %>"><%= data[i].pack_id %></a></th>
                                 <td><%= data[i].uid %></td>
                                 <td><%= moment(data[i].start_date).format('Do MMMM, YYYY'); %></td>
                                 <td><%= moment(data[i].finish_date).format('Do MMMM, YYYY'); %></td>

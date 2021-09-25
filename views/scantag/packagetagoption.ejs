@@ -72,9 +72,17 @@
             <% } %>
             <ul class="nav nav-pills w-100">
                 <% if(data.length) { %>
-                <li class="nav-link">
-                    <a href="../data/packfinish?pack_id=<%= data[0].pack_id %>" onclick="return confirm('Are you sure?')" class="btn btn-success ">ปิดกล่อง</a>
-                </li>
+                    <% if(data[0].statu == 0) { %>
+                        <li class="nav-link">
+                            <a href="../data/packfinish?pack_id=<%= data[0].pack_id %>" onclick="return confirm('Are you sure?')" class="btn btn-success ">ปิดกล่อง</a>
+                        </li>
+                    <% } %>
+                    <% if(data[0].statu == 1) { %>
+                        <li class="nav-link">
+                            <a href="../data/listordering?pack_id=<%= data[0].pack_id %>" class="btn btn-warning ">กดเพิ่มลงออเดอร์</a>
+                        </li>
+                    <% } else {%>
+                        <% } %>
                 <li class="nav-link">
                     <a href="../data/deletepacklist?pack_id=<%= data[0].pack_id %>" onclick="return confirm('Are you sure?')" class="btn btn-danger delete">Delete</a>
                 </li>

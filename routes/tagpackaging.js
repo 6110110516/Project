@@ -103,7 +103,6 @@ router.get('/listpacking', (req, res, next) => {
             req.flash('error', err);
             res.render('tagpackaging/listpacking', { data: ''});
         }else{
-                            console.log(rows)
             res.render('tagpackaging/listpacking', { crab_id: crab_id ,data: rows , moment: moment});
         }
     });
@@ -116,8 +115,6 @@ router.get('/listordering', (req, res, next) => {
             req.flash('error', err);
             res.render('tagpackaging/listordering', { data: ''});
         }else{
-            console.log(rows)
-            
             res.render('tagpackaging/listordering', { pack_id: pack_id ,data: rows , moment: moment});
         }
     });
@@ -152,9 +149,9 @@ router.get('/listpackino', (req, res, next) => {
     dbCon.query('SELECT * FROM order_packaging WHERE order_id = ?',order_id, (err, rows) => {
         if (err) {
             req.flash('error', err);
-            res.render('tagpackaging/listpackinorder', { data: ''});
+            res.render('tagpackaging/listpackinorder', { order_id: order_id,data: ''});
         }else{
-            res.render('tagpackaging/listpackinorder', { data: rows , moment: moment});
+            res.render('tagpackaging/listpackinorder', { order_id:order_id,data: rows , moment: moment});
         }
     });
 })
@@ -221,22 +218,15 @@ router.get('/deletepack', (req, res, next) => {
 router.get('/deletepacklist', (req, res, next) => {
     let pack_id = req.query.pack_id;
     backURL=req.header('Referer') || '/';
-    dbCon.query('DELETE FROM order_packaging WHERE pack_id = ?',pack_id, (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.redirect('/data');
-        }else{
-            dbCon.query('UPDATE tagnfc_packaging SET pack_id_temp = null WHERE pack_id_temp = ?',pack_id, (err, rows) => {
-                if (err) {
-                    req.flash('error', err);
-                    res.redirect('/data');
-                }else{
-                    req.flash('success', 'tagNFC successfully deleted');
-                    res.redirect(backURL);   
-                }
-            });
-        }
-    });
+        dbCon.query('UPDATE tagnfc_packaging SET pack_id_temp = null WHERE pack_id_temp = ?',pack_id, (err, rows) => {
+            if (err) {
+                req.flash('error', err);
+                res.redirect('/data');
+            }else{
+                req.flash('success', 'tagNFC successfully deleted');
+                res.redirect(backURL);   
+            }
+        });
 })
 
 router.get('/packagetagoption', (req, res, next) => {
@@ -345,6 +335,20 @@ router.post('/packstart', (req, res, next) => {
         });
 })   
 
+router.get('/createorder', (req, res, next) => {
+    backURL=req.header('Referer') || '/';
+    dbCon.query('INSERT INTO order_list SET statu = 0', (err, result) => {
+            if (err) {
+                console.log(err);
+                req.flash('error', err);
+                res.redirect(backURL); 
+            }
+            else{
+                res.redirect(backURL); 
+            }   
+        });
+})   
+
 router.get('/crabmolt', (req, res, next) => {
     let crab_id = req.query.crab_id;
     let c = req.query.c;
@@ -378,16 +382,8 @@ router.get('/packfinish', (req, res, next) => {
             req.flash('error', err);
             res.redirect('/data');
         }else{
-            dbCon.query('UPDATE tagnfc_packaging SET pack_id_temp = null WHERE pack_id_temp = ?',pack_id, (err1, rows1) => {
-                if (err1) {
-                    req.flash('error', err1);
-                    res.redirect('/data');
-                }else{
-                    req.flash('success', 'tagNFC successfully deleted');
-                    res.redirect('/data/listordering?pack_id='+pack_id);
-                  
-                }
-            });
+            req.flash('success', 'tagNFC successfully deleted');
+            res.redirect('/data/listordering?pack_id='+pack_id);
         }
     });
 })
@@ -435,7 +431,7 @@ router.get('/ordering', (req, res, next) => {
     dbCon.query(sqlt, (err, rows) => {
         if (err) {
             req.flash('error', err);
-            res.redirect('/data?ll=99');
+            res.redirect('/data');
         }else{
 
             dbCon.query('SELECT * FROM order_list WHERE order_id = ?',order_id, (err1, rows1) => {
@@ -461,3 +457,5 @@ router.get('/ordering', (req, res, next) => {
         }
     });
 })
+
+module.exports = router;
