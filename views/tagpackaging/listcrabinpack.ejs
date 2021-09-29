@@ -34,8 +34,8 @@
                             <th scope="col">Crab ID</th>
                             <th scope="col">UID tag </th>
                             <th scope="col">Start date </th>
-                            <th scope="col">Finish date</th>
-                            <th scope="col">pack_id</th>
+                            <th scope="col">Molt date</th>
+
                             <th scope="col">สถานะ</th>
                             <!-- <th width="400px"></th> -->
                         </tr>
@@ -47,7 +47,7 @@
                                 <td><%= data[i].uid %></td>
                                 <td><%= moment(data[i].start_date).format('Do MMMM, YYYY'); %></td>
                                 <td><%= moment(data[i].molt_date).format('Do MMMM, YYYY'); %></td>
-                                <td><%= data[i].pack_id %></td>
+
                                 <% if(data[i].statu == 0) {%>
                                     <td> 
                                         <a class="btn btn-info">กำลังเลี้ยง</a>
