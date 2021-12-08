@@ -61,6 +61,7 @@ router.get('/packagetagoption', (req, res, next) => {
 router.get('/farmtagoption', (req, res, next) => {
     let crab_id;
     let uid = req.query.uid;
+    let Jsonget = "https://connexthings.io/device/6HYNgGw2XnBZB0oihLQN/reportedStates?fbclid=IwAR2NsNwVWlQa17e7ot4iGbh3rIAp1WDS5XkgZghvpgEWU0Sj0dEkyUuisTI"
     dbCon.query('SELECT * FROM tagnfc_farm WHERE uid = ?',uid, (err, rows) => {
         if (err) {
             console.log(err);
@@ -73,10 +74,10 @@ router.get('/farmtagoption', (req, res, next) => {
                     if (err) {
                         console.log(err);
                         req.flash('error', err);
-                        res.render('scantag/farmtagoption', { uid: uid});
+                        res.render('scantag/farmtagoption', { uid: uid });
                     }
                     else
-                        res.render('scantag/farmtagoption', { uid: uid,data: rows , moment: moment});
+                        res.render('scantag/farmtagoption', { uid: uid, data: rows , moment: moment});
             });
         }
     });

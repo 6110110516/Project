@@ -3,6 +3,7 @@ let router = express.Router();
 let dbCon = require('../lib/db');
 var moment = require('moment');
 const e = require('express');
+var axios = require('axios');
 
 router.get('/', (req, res, next) => {
     dbCon.query('SELECT * FROM tagnfc_packaging ORDER BY uid', (err, rows) => {
@@ -256,54 +257,84 @@ router.get('/packagetagoption', (req, res, next) => {
 router.get('/farmtagoption', (req, res, next) => {
     let crab_id;
     let uid = req.query.uid;
-    dbCon.query('SELECT * FROM tagnfc_farm WHERE uid = ?',uid, (err, rows) => {
+    let dataj;
+
+    axios.get('https://connexthings.io/device/6HYNgGw2XnBZB0oihLQN/reportedStates?fbclid=IwAR2NsNwVWlQa17e7ot4iGbh3rIAp1WDS5XkgZghvpgEWU0Sj0dEkyUuisTI')
+    .then(resj => {
+        dataj = resj.data;
+        console.log(dataj);
+
+        dbCon.query('SELECT * FROM tagnfc_farm WHERE uid = ?',uid, (err, rows) => {
         if (err) {
             console.log(err);
             req.flash('error', err);
             req.redirect('/data/farmtag');
         }
         else{
+            
             crab_id = rows[0].crab_id_temp;
             dbCon.query('SELECT * FROM crab_farm WHERE crab_id = "?"',crab_id, (err, rows) => {
                     if (err) {
                         console.log(err);
                         req.flash('error', err);
-                        res.render('scantag/farmtagoption', { uid: uid});
+                        res.render('scantag/farmtagoption', { uid: uid,dataj: dataj});
                     }
                     else
-                        res.render('scantag/farmtagoption', { uid: uid,data: rows , moment: moment});
+                        res.render('scantag/farmtagoption', { uid: uid,dataj: dataj,data: rows , moment: moment});
             });
         }
     });
+    }).catch(error => {
+        console.errer(errer);
+    });
+ 
+    
 })   
 
 router.post('/crabstart', (req, res, next) => {
     let uid = req.query.uid;
+    let amount = req.body.amount;
     let crab_id;
     let sqlt;
-    dbCon.query('INSERT INTO crab_farm SET uid = ?',uid, (err, result) => {
-            if (err) {
-                console.log(err);
-                req.flash('error', err);
-                res.render('scantag/farmtagoption', { uid: uid});
-            }
-            else{
-                // res.redirect('/data/crabupdate?uid='+uid);
-                crab_id = result.insertId;
-                sqlt = 'UPDATE tagnfc_farm SET crab_id_temp = '+crab_id+' WHERE uid = "'+uid+'"';
+    let errors = false;
+    backURL=req.header('Referer') || '/';
+    console.log(amount);
 
-                dbCon.query(sqlt, (err1, rows1) => {
-                    if (err1) {
+    if (amount == null ) {
+        errors = true;
+        // set flash message
+        req.flash('error', 'กรอกข้อมูลให้ครบ');
+        // render to add.ejs with flash message
+        res.redirect(backURL);
+        // res.render('tagpackaging/farmtagoption?uid='+uid, {
+        //     uid: uid,
+        // })
+    }
+    if(!errors){
+        dbCon.query('INSERT INTO crab_farm SET uid = ?',uid, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    req.flash('error', err);
+                    res.render('scantag/farmtagoption', { uid: uid});
+                }
+                else{
+                    // res.redirect('/data/crabupdate?uid='+uid);
+                    crab_id = result.insertId;
+                    sqlt = 'UPDATE tagnfc_farm SET crab_id_temp = '+crab_id+' WHERE uid = "'+uid+'"';
 
-                        console.log(err1);
-                        req.flash('error', err1);
-                        res.render('scantag/farmtagoption', { uid: uid});
-                    }
-                    else
-                        res.redirect('/data/farmtagoption?uid='+uid);
-                });
-            }   
+                    dbCon.query(sqlt, (err1, rows1) => {
+                        if (err1) {
+
+                            console.log(err1);
+                            req.flash('error', err1);
+                            res.render('scantag/farmtagoption', { uid: uid});
+                        }
+                        else
+                            res.redirect('/data/farmtagoption?uid='+uid);
+                    });
+                }   
         });
+    }
 })   
 
 router.post('/packstart', (req, res, next) => {

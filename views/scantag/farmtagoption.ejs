@@ -9,10 +9,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body class="container" style="margin-top: 20px;">
-
+     
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- <% if (messages.error) { %>
         <div class="alert alert-danger" role="alert"><%= messages.error %></div>
     <% } %> -->
+     
+    
 
     <% if (messages.error) { %>
         <div class="alert alert-danger" role="alert"><%= messages.error %></div>
@@ -39,11 +42,11 @@
                             
                     <!-- <th scope="col">#</th> -->
                     <tr>
-                        <th scope="row">Crab ID</th>
+                        <th scope="row">Lot ID</th>
                         <th ><%= data[0].crab_id %></th>
                     </tr>
                     <tr>
-                        <th scope="row">UID tag </th>
+                        <th scope="row">Farm ID </th>
                         <td><%= data[0].uid %></td>
                     </tr>
                     <tr>
@@ -70,15 +73,53 @@
 
                     </tr>
                    
-                    <!-- <th width="400px"></th> -->
-                    
-                    </tbody>                                                                                                                                              
+
+                    <tr> 
+                        <th scope="row">DO </th>
+                        <td><%= dataj.DO %>
+                        <%if(dataj.DO>4)  {%>
+                            <a style="background-color: #00ff00" > (    ดี    ) </a>
+                        <%} %>
+                        <%if(!(dataj.DO>4))  {%>
+                            <a style="background-color: #ff0000" > (    แย่    ) </a>        
+                        <% }%>           
+                        </td>
+                    </tr>
+                    <tr> 
+                        <th scope="row">pH </th>
+                        <td><%= dataj.Ph %>
+                        <%if(dataj.Ph>7&&dataj.Ph<8.5)  {%>
+                            <a style="background-color: #00ff00" > (    ดี    ) </a>
+                        <%} %>
+                        <%if(!(dataj.Ph>7&&dataj.Ph<8.5))  {%>
+                            <a style="background-color: #ff0000" > (    แย่    ) </a>        
+                        <% }%> 
+                        </td>
+                    </tr>
+                    <tr> 
+                        <th scope="row">Tem </th>
+                        <td><%= dataj.Tem %>
+                         <%if(dataj.Tem>28&&dataj.Tem<30)  {%>
+                            <a style="background-color: #00ff00" > (    ดี    ) </a>
+                        <%} %>
+                        <%if(!(dataj.Tem>28&&dataj.Tem<30))  {%>
+                            <a style="background-color: #ff0000" > (    แย่    ) </a>        
+                        <% }%>    
+                        </td>
+                    </tr>
+                    <tr> 
+                        <th scope="row">Ec </th>
+                        <td><%= dataj.Ec %></td>
+                    </tr>
+
+                   </tbody>                                                                                                                                              
                </table>
             <% } %>
 
             <!-- if result is empty -->
             <% if(!data.length) { %>
                 <p class="text-center">No Order found!</p>
+
             <% } %>
             <ul class="nav nav-pills w-100">
                 <% if(data.length) { %>
@@ -95,6 +136,9 @@
                 <% if(!data.length) { %>
                     <form action="/data/crabstart?uid=<%= uid %>" method="post"  >           
                         <div class="form-group">
+                            <label>กรอกจำนวนปู</label>
+                            <input type="number" class="form-control" id="amount" name="amount" >  
+                            <br>     
                             <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-info" value="เริ่มใช้งาน">
                         </div>
                     </form>
