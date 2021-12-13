@@ -299,6 +299,7 @@ router.post('/crabstart', (req, res, next) => {
     let errors = false;
     backURL=req.header('Referer') || '/';
     console.log(amount);
+    let quertxt = "INSERT INTO crab_farm SET uid = '"+uid+"',amount_crab = "+amount;
 
     if (amount == null ) {
         errors = true;
@@ -310,8 +311,10 @@ router.post('/crabstart', (req, res, next) => {
         //     uid: uid,
         // })
     }
+
+
     if(!errors){
-        dbCon.query('INSERT INTO crab_farm SET uid = ?',uid, (err, result) => {
+        dbCon.query(quertxt, (err, result) => {
                 if (err) {
                     console.log(err);
                     req.flash('error', err);
