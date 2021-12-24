@@ -45,11 +45,11 @@
                     <tbody>
                         <% for(let i = 0; i < data.length; i++) { %>
                             <tr>
-                                <th  scope="row"><a href="/data/listcrabinp?pack_id=<%= data[i].pack_id %>"><%= data[i].pack_id %></a></th>
+                                <th  scope="row"><a href="/data/packagetagoption?uid=<%= data[i].uid %>"><%= data[i].pack_id %></a></th>
                                 <td><%= data[i].uid %></td>
                                 <td><%= moment(data[i].start_date).format('Do MMMM, YYYY'); %></td>
                                 <td><%= moment(data[i].finish_date).format('Do MMMM, YYYY'); %></td>
-                                <td><%= data[i].amount_crab %></td>
+                                <td><%= data[i].amount_crab %></td> 
                                 <% if(data[i].statu == 0) {%>
                                 <td> 
                                     <a class="btn btn-info">กำลังจัดเตรียม</a>

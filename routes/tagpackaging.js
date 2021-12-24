@@ -159,7 +159,7 @@ router.get('/listpackino', (req, res, next) => {
 
 router.get('/listcrabinp', (req, res, next) => {
     let pack_id = req.query.pack_id;
-    dbCon.query('SELECT * FROM crab_farm WHERE pack_id = ?',pack_id, (err, rows) => {
+    dbCon.query('SELECT * FROM order_packaging WHERE pack_id = ?',pack_id, (err, rows) => {
         if (err) {
             req.flash('error', err);
             res.render('tagpackaging/listcrabinpack', { data: ''});
@@ -284,6 +284,8 @@ router.get('/farmtagoption', (req, res, next) => {
             });
         }
     });
+
+    
     }).catch(error => {
         console.errer(errer);
     });
@@ -420,6 +422,13 @@ router.get('/packfinish', (req, res, next) => {
             res.redirect('/data/listordering?pack_id='+pack_id);
         }
     });
+})
+
+router.get('/packupdate', (req, res, next) => {
+    let pack_id = req.query.pack_id;
+    res.redirect('/users');
+    // res.render('tagpackaging/packupdate', { pack_id: pack_id});
+
 })
 
 router.get('/packing', (req, res, next) => {
