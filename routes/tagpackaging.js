@@ -426,10 +426,31 @@ router.get('/packfinish', (req, res, next) => {
 
 router.get('/packupdate', (req, res, next) => {
     let pack_id = req.query.pack_id;
-    res.redirect('/users');
-    // res.render('tagpackaging/packupdate', { pack_id: pack_id});
+    let uid = req.query.uid;
+    // res.redirect('/users');
+    res.render('tagpackaging/packupdate', { pack_id: pack_id, uid: uid});
 
 })
+
+router.post('/updata', (req, res, next) => {
+    let updatetxt = req.body.updatetxt;
+    let pack_id = req.query.pack_id;
+    let uid = req.query.uid;
+    let sqlt= 'INSERT INTO update_status SET pack_id = '+pack_id+', update_pack = "'+updatetxt+'"';
+    dbCon.query(sqlt, (err, result) => {
+            if (err) {
+                console.log(err);
+                req.flash('error', err);
+                res.redirect('/data/packupdate?pack_id='+pack_id);
+            }
+            else{
+               
+                res.redirect('/data/packagetagoption?uid='+uid);
+                // res.render('scantag/packagetagoption', { uid: uid});
+
+            }   
+        });
+})  
 
 router.get('/packing', (req, res, next) => {
     let crab_id = req.query.crab_id;
