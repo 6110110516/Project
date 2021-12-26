@@ -164,7 +164,14 @@ router.get('/listcrabinp', (req, res, next) => {
             req.flash('error', err);
             res.render('tagpackaging/listcrabinpack', { data: ''});
         }else{
-            res.render('tagpackaging/listcrabinpack', { data: rows , moment: moment});
+            dbCon.query('SELECT * FROM update_status WHERE pack_id = ? ORDER BY num',pack_id, (err, rows2) => {
+                if (err) {
+                    req.flash('error', err);
+                    res.render('tagpackaging/listcrabinpack', {  data: rows , moment: moment});
+                }else{
+                    res.render('tagpackaging/listcrabinpack', { data: rows , data_up: rows2, moment: moment});
+                }
+            });        
         }
     });
 })

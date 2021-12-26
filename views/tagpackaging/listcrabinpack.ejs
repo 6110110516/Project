@@ -63,6 +63,10 @@
                     <tr>
                         <th scope="row">status</th>
                         <td>
+                            <% for(i=0;i< data_up.length; i++) {%>
+                            <%=data_up[i].timestamp %> -- <%=data_up[i].update_pack %>
+                            <br>
+                            <% } %>
                             <% if(data[0].statu == 0) {%>
                                     <a class="btn btn-info">เริ่มใช้งาน</a>
                                 <%} else if(data[0].statu == 1) {%>
