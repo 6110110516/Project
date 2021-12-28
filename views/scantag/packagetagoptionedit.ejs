@@ -4,26 +4,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>package Tag</title>
+    <title>Pack Tag</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body class="container" style="margin-top: 20px;">
-     
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     <!-- <% if (messages.error) { %>
         <div class="alert alert-danger" role="alert"><%= messages.error %></div>
     <% } %> -->
-     
-    
 
     <% if (messages.error) { %>
         <div class="alert alert-danger" role="alert"><%= messages.error %></div>
     <% } %>
     
+    
+
     <div class="card">
         <div class="card-header">
             <%include ../tabmenu/menu %>
+            <ul class="nav-link">Package Tag<br>UID :<%= uid %></ul>
         </div>
         <div class="card-body">
             <% if(data.length) { %>
@@ -45,7 +45,7 @@
                         <th ><%= data[0].pack_id %></th>
                     </tr>
                     <tr>
-                        <th scope="row">tag ID </th>
+                        <th scope="row">UID tag </th>
                         <td><%= data[0].uid %></td>
                     </tr>
                     <tr>
@@ -53,63 +53,42 @@
                         <td><%= moment(data[0].start_date).format('Do MMMM, YYYY'); %></td>
                     </tr>
                     <tr>
-                        <th scope="row">Molt date</th>
-                        <td><%= moment(data[0].molt_date).format('Do MMMM, YYYY'); %></td>
+                        <th scope="row">Finish date</th>
+                        <td><%= moment(data[0].finish_date).format('Do MMMM, YYYY'); %></td>
                     </tr>
                     <tr>
-                        <th scope="row">Amount crab</th>
+                        <th scope="row">จำนวนปู</th>
                         <td><%= data[0].amount_crab %></td>
                     </tr>
                     <tr>
                         <th scope="row">status</th>
                         <td>
                             <% for(i=0;i< data_up.length; i++) {%>
+                            <a style="color: red" href="/data/deleteupstatus?num=<%= data_up[i].num %>" onclick="return confirm('Are you sure?')">  ลบ </a>
                             <%= moment(data_up[i].timestamp).format("HH:mm:ss "+"...."+" DD-MM-YYYY ") %> -- <%=data_up[i].update_pack %>
+                            
                             <br>
                             <% } %>
-                            <% if(data[0].statu == 0) {%>
-                                    <a class="btn btn-info">เริ่มใช้งาน</a>
-                                <%} else if(data[0].statu == 1) {%>
-                                    <a class="btn btn-success">รอบรรจุ</a>                                                                 
-                                <%} else if(data[0].statu == 2) {%>   
-                                    <a class="btn btn-success">บรรจุแล้ว</a>                         
-                                <%} else {%>                               
-                                    <a class="btn btn-secondary"></a>         
-                                <% }%>
+    
                         </td>
 
                     </tr>
-                   
-
+                    <!-- <th width="400px"></th> -->
                     
-
-                   </tbody>                                                                                                                                              
+                    </tbody>                                                                                                                                              
                </table>
             <% } %>
 
             <!-- if result is empty -->
             <% if(!data.length) { %>
                 <p class="text-center">No Order found!</p>
-
             <% } %>
             <ul class="nav nav-pills w-100">
-                <% if(data.length) { %>
-                
-                <% } %>
-                <% if(!data.length) { %>
-                    <form action="/data/crabstart?uid=<%= uid %>" method="post"  >           
-                        <div class="form-group">
-                            <label>กรอกจำนวนปู</label>
-                            <input type="number" class="form-control" id="amount" name="amount" >  
-                            <br>     
-                            <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-info" value="เริ่มใช้งาน">
-                        </div>
-                    </form>
-
-                <% } %>
+                <li class="nav-link">
+                    <a href="../packagetagoption?uid=<%= data[0].uid %>&pack_id=<%= data[0].pack_id %>" onclick="return" class="btn btn-success ">เสร็จสิ้น</a>
+                </li>
             </ul>
         </div>
-        
     </div>
 
 </body>

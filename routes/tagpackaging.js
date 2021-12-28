@@ -237,6 +237,22 @@ router.get('/deletepacklist', (req, res, next) => {
         });
 })
 
+router.get('/deleteupstatus', (req, res, next) => {
+    let num = req.query.num;
+    backURL=req.header('Referer') || '/';
+
+    dbCon.query('DELETE FROM update_status WHERE num = ?',num, (err, rows) => {
+        if (err) {
+            req.flash('error', err);
+            res.redirect('/data');
+        }else{
+            req.flash('success', 'tagNFC successfully deleted');
+            res.redirect(backURL);   
+        }
+    });
+})
+
+
 router.get('/packagetagoption', (req, res, next) => {
     let pack_id;
     let uid = req.query.uid;
@@ -255,7 +271,45 @@ router.get('/packagetagoption', (req, res, next) => {
                     res.redirect('/data');
                 }
                 else
-                    res.render('scantag/packagetagoption', { uid: uid,data: rows , moment: moment});
+                    dbCon.query('SELECT * FROM update_status WHERE pack_id = ? ORDER BY num',pack_id, (err2, rows2) => {
+                        if (err2) {
+                            req.flash('error', err2);
+                            res.redirect('/data');
+                        }else{
+                            res.render('scantag/packagetagoption', { uid: uid,data: rows,data_up: rows2 , moment: moment});
+                        }
+                    });  
+            });
+        }
+    });
+})   
+
+router.get('/packagetagoption/edit', (req, res, next) => {
+    let pack_id;
+    let uid = req.query.uid;
+    dbCon.query('SELECT * FROM tagnfc_packaging WHERE uid = ?',uid, (err, rows) => {
+        if (err) {
+            console.log(err);
+            req.flash('error', err);
+            req.redirect('/data');
+        }
+        else{
+            pack_id = rows[0].pack_id_temp;
+            dbCon.query('SELECT * FROM order_packaging WHERE pack_id = "?"',pack_id, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    req.flash('error', err);
+                    res.redirect('/data');
+                }
+                else
+                    dbCon.query('SELECT * FROM update_status WHERE pack_id = ? ORDER BY num',pack_id, (err2, rows2) => {
+                        if (err2) {
+                            req.flash('error', err2);
+                            res.redirect('/data');
+                        }else{
+                            res.render('scantag/packagetagoptionedit', { uid: uid,data: rows,data_up: rows2 , moment: moment});
+                        }
+                    });  
             });
         }
     });
@@ -441,22 +495,48 @@ router.get('/packupdate', (req, res, next) => {
 
 router.post('/updata', (req, res, next) => {
     let updatetxt = req.body.updatetxt;
+    let reason = req.body.reason;
     let pack_id = req.query.pack_id;
     let uid = req.query.uid;
-    let sqlt= 'INSERT INTO update_status SET pack_id = '+pack_id+', update_pack = "'+updatetxt+'"';
-    dbCon.query(sqlt, (err, result) => {
-            if (err) {
-                console.log(err);
-                req.flash('error', err);
-                res.redirect('/data/packupdate?pack_id='+pack_id);
-            }
-            else{
-               
-                res.redirect('/data/packagetagoption?uid='+uid);
-                // res.render('scantag/packagetagoption', { uid: uid});
+    let sqlt;
+    let errors = false;
+    let txt;
+    if((reason == 0  &&updatetxt.length === 0 )||reason == null){
+        errors = true;
+        // set flash message
+        req.flash('error', 'กรอกข้อมูลให้ครบ');
+        res.redirect('/data/packupdate?pack_id='+pack_id); 
+    }
 
-            }   
-        });
+    if(!errors){
+        
+        if(reason == 1)
+            txt = "บรรจุปู";
+        else if (reason == 2)
+            txt = "นำส่งปู";
+        else if (reason == 0)
+            txt = updatetxt;
+        else{
+            console.log("กรอกข้อมูลให้ครบ");
+            req.flash('error', "กรอกข้อมูลให้ครบ");
+            res.redirect('/data/packupdate?pack_id='+pack_id); 
+        }    
+        console.log(txt);
+        sqlt = 'INSERT INTO update_status SET pack_id = '+pack_id+', update_pack = "'+txt+'"';
+        dbCon.query(sqlt, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    req.flash('error', err);
+                    res.redirect('/data/packupdate?pack_id='+pack_id);
+                }
+                else{
+                
+                    res.redirect('/data/packagetagoption?uid='+uid);
+                    // res.render('scantag/packagetagoption', { uid: uid});
+
+                }   
+            });
+    }
 })  
 
 router.get('/packing', (req, res, next) => {

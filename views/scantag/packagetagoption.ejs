@@ -60,6 +60,17 @@
                         <th scope="row">จำนวนปู</th>
                         <td><%= data[0].amount_crab %></td>
                     </tr>
+                    <tr>
+                        <th scope="row">status</th>
+                        <td>
+                            <% for(i=0;i< data_up.length; i++) {%>
+                            <%= moment(data_up[i].timestamp).format("HH:mm:ss "+"...."+" DD-MM-YYYY ") %> -- <%=data_up[i].update_pack %>
+                            <br>
+                            <% } %>
+    
+                        </td>
+
+                    </tr>
                     <!-- <th width="400px"></th> -->
                     
                     </tbody>                                                                                                                                              
@@ -78,6 +89,9 @@
                         </li>
                         <li class="nav-link">
                             <a href="../data/packupdate?uid=<%= data[0].uid %>&pack_id=<%= data[0].pack_id %>" class="btn btn-success ">update สถานะ</a>
+                        </li>
+                        <li class="nav-link">
+                            <a href="../data/packagetagoption/edit?uid=<%= data[0].uid %>&pack_id=<%= data[0].pack_id %>" class="btn btn-success ">Edit</a>
                         </li>
                     <% } %>
                     <% if(data[0].statu == 1) { %>

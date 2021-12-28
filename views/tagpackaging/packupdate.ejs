@@ -25,9 +25,14 @@
         </div>
         <div class="card-body">
             <form action="/data/updata?uid=<%= uid %>&pack_id=<%= pack_id %>" method="post">
-                <div class="form-group">
-                    <label>กรอกข้อมูล:</label>
-                    <input type="text" class="form-control" name="updatetxt" autocomplete="off">
+                <div class="form-group">                    
+                    กรอกข้อมูล:<br><br>
+                    <input type="radio" id="choice1" name="reason" value="1" >
+                    <label for="choice1"> กำลังบรรจุปู </label><br>
+                    <input type="radio" id="choice2" name="reason" value="2" >
+                    <label for="choice2"> กำลังนำส่งปู </label> <br>
+                    <input type="radio" id="other" name="reason" value="0">
+                    <label for="other">Other <input type="text" name="updatetxt" /> </label>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-info" value="บันทึก">

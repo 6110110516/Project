@@ -51,8 +51,16 @@ router.get('/packagetagoption', (req, res, next) => {
                     req.flash('error', err);
                     res.redirect('/data');
                 }
-                else
-                    res.render('scantag/packagetagoption', { uid: uid,data: rows , moment: moment});
+                else{
+                    dbCon.query('SELECT * FROM update_status WHERE pack_id = ? ORDER BY num',pack_id, (err2, rows2) => {
+                        if (err2) {
+                            req.flash('error', err2);
+                            res.redirect('/data');
+                        }else{
+                            res.render('scantag/packagetagoption', { uid: uid,data: rows,data_up: rows2 , moment: moment});
+                        }
+                    });       
+                }
             });
         }
     });
