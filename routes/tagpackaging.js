@@ -271,14 +271,18 @@ router.get('/packagetagoption', (req, res, next) => {
                     res.redirect('/data');
                 }
                 else
-                    dbCon.query('SELECT * FROM update_status WHERE pack_id = ? ORDER BY num',pack_id, (err2, rows2) => {
-                        if (err2) {
-                            req.flash('error', err2);
-                            res.redirect('/data');
-                        }else{
-                            res.render('scantag/packagetagoption', { uid: uid,data: rows,data_up: rows2 , moment: moment});
-                        }
-                    });  
+                    if(pack_id == null){
+                        res.render('scantag/packagetagoption', { uid: uid,data: rows});
+                    }
+                    else
+                        dbCon.query('SELECT * FROM update_status WHERE pack_id = ? ORDER BY num',pack_id, (err2, rows2) => {
+                            if (err2) {
+                                req.flash('error', err2);
+                                res.redirect('/data');
+                            }else{
+                                res.render('scantag/packagetagoption', { uid: uid,data: rows,data_up: rows2 , moment: moment});
+                            }
+                        });  
             });
         }
     });
