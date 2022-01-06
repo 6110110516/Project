@@ -23,11 +23,11 @@ router.get('/', (req, res, next) => {
                                 uid: req.query.uid
                             })
                         else
-                        res.redirect('/scan/farmtagoption?uid='+uid);
+                        res.redirect('/data/farmtagoption?uid='+uid);
                     }
                 });
             else{
-                res.redirect('/scan/packagetagoption?uid='+uid);
+                res.redirect('/data/packagetagoption?uid='+uid);
             } 
     });
     else

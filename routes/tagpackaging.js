@@ -39,19 +39,14 @@ router.get('/add', (req, res, next) => {
 
 router.post('/add', (req, res, next) => {
     let uid = req.body.uid;
-    let tagtype = req.body.typetag;
     let errors = false;
     let quertxt;
     let directq;
-    if(tagtype == "crab"){
-        quertxt = "INSERT INTO tagnfc_farm SET uid= ?, crab_id_temp =null";
-        directq = '/data/farmtag';
-    }
-    else if(tagtype == "package"){
-        quertxt = "INSERT INTO tagnfc_packaging SET uid = ?, pack_id_temp = null";
-        directq = '/data';
-    }
-    if (uid.length === 0 || tagtype == null) {
+    
+    quertxt = "INSERT INTO tagnfc_packaging SET uid = ?, pack_id_temp = null";
+    directq = '/data/packagetagoption';
+    
+    if (uid.length == 0 ) {
         errors = true;
         // set flash message
         req.flash('error', 'กรอกข้อมูลให้ครบ');
@@ -79,7 +74,7 @@ router.post('/add', (req, res, next) => {
                 })
             } else {
                 req.flash('success', 'tagNFC successfully added');
-                res.redirect(directq);
+                res.redirect(directq+"?uid="+uid);
             }
         })
     }
@@ -256,11 +251,14 @@ router.get('/deleteupstatus', (req, res, next) => {
 router.get('/packagetagoption', (req, res, next) => {
     let pack_id;
     let uid = req.query.uid;
+    
+        
+    
     dbCon.query('SELECT * FROM tagnfc_packaging WHERE uid = ?',uid, (err, rows) => {
-        if (err) {
+        if (err || uid.length == 0) {
             console.log(err);
             req.flash('error', err);
-            req.redirect('/data');
+            res.redirect('/data');
         }
         else{
             pack_id = rows[0].pack_id_temp;
@@ -409,9 +407,11 @@ router.post('/crabstart', (req, res, next) => {
 
 router.post('/packstart', (req, res, next) => {
     let uid = req.query.uid;
+    let amount = req.body.amount
     let pack_id;
-    let sqlt;
-    dbCon.query('INSERT INTO order_packaging SET uid = ?',uid, (err, result) => {
+    let sqlt2;
+    let sqlt1 = 'INSERT INTO order_packaging SET uid = "'+uid+'" , amount_crab = '+amount;
+    dbCon.query(sqlt1, (err, result) => {
             if (err) {
                 console.log(err);
                 req.flash('error', err);
@@ -420,9 +420,9 @@ router.post('/packstart', (req, res, next) => {
             else{
                 // res.redirect('/data/crabupdate?uid='+uid);
                 pack_id = result.insertId;
-                sqlt = 'UPDATE tagnfc_packaging SET pack_id_temp = '+pack_id+' WHERE uid = "'+uid+'"';
+                sqlt2 = 'UPDATE tagnfc_packaging SET pack_id_temp = '+pack_id+' WHERE uid = "'+uid+'"';
 
-                dbCon.query(sqlt, (err1, rows1) => {
+                dbCon.query(sqlt2, (err1, rows1) => {
                     if (err1) {
 
                         console.log(err1);

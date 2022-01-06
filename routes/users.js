@@ -17,7 +17,6 @@ router.get('/', function(req, res, next) {
   }
 });
 
-
 router.post('/check',(req, res, next) => {
   let order_id = req.body.order_id;
   let errors = false;
@@ -30,22 +29,51 @@ router.post('/check',(req, res, next) => {
     order_id = 0;
     errors = true;
     // set flash message
-    req.flash('error', 'Please enter UID');
+    req.flash('error', 'Please enter ID');
     // render to add.ejs with flash message
     res.redirect('/users');
 }
   if(!errors){
-    dbCon.query('SELECT * FROM order_list WHERE order_id = ?',order_id, (err, rows) => {
+    dbCon.query('SELECT * FROM order_packaging WHERE pack_id = ?',order_id, (err, rows) => {
       if (err) {
           req.flash('error', err);
-          res.render('users/checkbyid', { order_id: order_id ,data: '' , moment: moment});
+          res.render('users/checkbyid', { pack_id: order_id ,data: '' , moment: moment});
       }else{
           
-          res.render('users/checkbyid', { order_id: order_id, data: rows , moment: moment});
+          res.render('users/checkbyid', { pack_id: order_id, data: rows , moment: moment});
       }
     }) 
   }
 })
+
+// router.post('/check',(req, res, next) => {
+//   let order_id = req.body.order_id;
+//   let errors = false;
+//   if (req.query.order_id != null){
+//     errors = true;
+//     order_id = req.query.order_id;
+//   }
+
+//   if (order_id.length === 0) {
+//     order_id = 0;
+//     errors = true;
+//     // set flash message
+//     req.flash('error', 'Please enter UID');
+//     // render to add.ejs with flash message
+//     res.redirect('/users');
+// }
+//   if(!errors){
+//     dbCon.query('SELECT * FROM order_list WHERE order_id = ?',order_id, (err, rows) => {
+//       if (err) {
+//           req.flash('error', err);
+//           res.render('users/checkbyid', { order_id: order_id ,data: '' , moment: moment});
+//       }else{
+          
+//           res.render('users/checkbyid', { order_id: order_id, data: rows , moment: moment});
+//       }
+//     }) 
+//   }
+// })
 
 
 module.exports = router;

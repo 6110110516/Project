@@ -27,18 +27,18 @@
             <form action="/users/check" method="post">
                 <div class="form-group">
                     <label>Order ID:</label>
-                    <input type="text" class="form-control" name="order_id" value="<%= order_id %>" autocomplete="off">
+                    <input type="text" class="form-control" name="order_id" value="<%= pack_id %>" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-info" value="ค้นหา">
                 </div>
             </form>
-                <% if(data.length != 0 || order_id != 0) { %>
+                <% if(data.length != 0 || pack_id != 0) { %>
                     <table class="table">
                         <thead>
                             <tr>
                                 <!-- <th scope="col">#</th> -->
-                                <th scope="col">Order id</th>
+                                <th scope="col">Pack id</th>
                                 <th scope="col">Start date </th>
                                 <th scope="col">Finish date</th>
                                 <th scope="col">จำนวนกล่อง</th>
@@ -48,10 +48,10 @@
                         <tbody>
                             <% for(let i = 0; i < data.length; i++) { %>
                                 <tr>
-                                    <th scope="row"><a  href="../data/listpackino?order_id=<%= data[i].order_id %>" ><%= data[i].order_id %></a></th>
+                                    <th scope="row"><a  href="../data/listcrabinp?pack_id=<%= data[i].pack_id %>" ><%= data[i].pack_id %></a></th>
                                     <td><%= moment(data[i].start_date).format('Do MMMM, YYYY'); %></td>
                                     <td><%= moment(data[i].finish_date).format('Do MMMM, YYYY'); %></td>
-                                    <td><%= data[i].pack_amount %></td>
+                                    <td><%= data[i].amount_crab %></td>
     
                                     <td> 
                                         <!-- <a href="../tagpack/checkorder/<%= data[i].order_id_temp %>" class="btn btn-success edit">Check order</a> -->
@@ -64,7 +64,7 @@
                 <% } %>
     
                 <!-- if result is empty -->
-                <% if(data.length == 0||order_id == 0) { %>
+                <% if(data.length == 0||pack_id == 0) { %>
                     <p class="text-center">No Order found!</p>
                 <% } %>
         </div>
