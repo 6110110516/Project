@@ -10,9 +10,9 @@
 </head>
 <body class="container" style="margin-top: 20px;">
 
-    <!-- <% if (messages.error) { %>
-        <div class="alert alert-danger" role="alert"><%= messages.error %></div>
-    <% } %> -->
+    <% if (messages.success) { %>
+        <div class="alert alert-success" role="alert"><%= messages.success %></div>
+    <% } %>
 
     <% if (messages.error) { %>
         <div class="alert alert-danger" role="alert"><%= messages.error %></div>
@@ -52,13 +52,31 @@
                         <th scope="row">Start date </th>
                         <td><%= moment(data[0].start_date).format('Do MMMM, YYYY'); %></td>
                     </tr>
+                    
+
+                    <% if (data[0].finish_date != null){ %>
                     <tr>
                         <th scope="row">Finish date</th>
                         <td><%= moment(data[0].finish_date).format('Do MMMM, YYYY'); %></td>
                     </tr>
+                    <% } %>
                     <tr>
                         <th scope="row">จำนวนปู</th>
-                        <td><%= data[0].amount_crab %></td>
+                        <!-- <form action="/data/packstart?uid=<%= uid %>" method="post"  >           
+                            <div class="form-grup">
+                                <label>กรอกจำนวนปู</label>
+                                <input type="number" class="form-control" id="amount" name="amount" value="data[0].amount_crab">      
+                                <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-info" value="เริ่มใช้งาน">
+                            </div>
+                        </form> -->
+                        <td>
+                            <form action="/data/editamount?pack_id=<%= data[0].pack_id %>" method="post">
+                                <div class="form-grup">
+                                    <input type="number" style="width: 100px;" class="form-control" id="amount" name="amount" value="<%= data[0].amount_crab %>" autocomplete="off">      
+                                    <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-info" value="บันทึก">
+                                </div>
+                            </form>
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">status</th>
@@ -85,7 +103,7 @@
             <% } %>
             <ul class="nav nav-pills w-100">
                 <li class="nav-link">
-                    <a href="../packagetagoption?uid=<%= data[0].uid %>&pack_id=<%= data[0].pack_id %>" onclick="return" class="btn btn-success ">เสร็จสิ้น</a>
+                    <a href="../packagetagoption?uid=<%= data[0].uid %>" onclick="return" class="btn btn-success ">เสร็จสิ้น</a>
                 </li>
             </ul>
         </div>

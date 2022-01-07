@@ -241,18 +241,32 @@ router.get('/deleteupstatus', (req, res, next) => {
             req.flash('error', err);
             res.redirect('/data');
         }else{
-            req.flash('success', 'tagNFC successfully deleted');
+            req.flash('success', 'ลบแล้ว');
             res.redirect(backURL);   
         }
     });
 })
 
+router.post('/editamount', (req, res, next) => {
+    let amount = req.body.amount;
+    let pack_id = req.query.pack_id;
+    backURL=req.header('Referer') || '/';
+    let sqlt = 'UPDATE order_packaging SET amount_crab = "'+amount+'" WHERE pack_id = '+pack_id;
+
+    dbCon.query(sqlt, (err, rows) => {
+        if (err) {
+            req.flash('error', err);
+            res.redirect('/data');
+        }else{
+            req.flash('success', 'บันทึกแล้ว');
+            res.redirect(backURL);   
+        }
+    });
+})
 
 router.get('/packagetagoption', (req, res, next) => {
     let pack_id;
     let uid = req.query.uid;
-    
-        
     
     dbCon.query('SELECT * FROM tagnfc_packaging WHERE uid = ?',uid, (err, rows) => {
         if (err || uid.length == 0) {
@@ -534,10 +548,9 @@ router.post('/updata', (req, res, next) => {
                     res.redirect('/data/packupdate?pack_id='+pack_id);
                 }
                 else{
-                
+                    req.flash('success', 'บันทึกแล้ว');
                     res.redirect('/data/packagetagoption?uid='+uid);
                     // res.render('scantag/packagetagoption', { uid: uid});
-
                 }   
             });
     }

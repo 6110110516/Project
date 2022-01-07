@@ -10,9 +10,9 @@
 </head>
 <body class="container" style="margin-top: 20px;">
 
-    <!-- <% if (messages.error) { %>
-        <div class="alert alert-danger" role="alert"><%= messages.error %></div>
-    <% } %> -->
+    <% if (messages.success) { %>
+        <div class="alert alert-success" role="alert"><%= messages.success %></div>
+    <% } %>
 
     <% if (messages.error) { %>
         <div class="alert alert-danger" role="alert"><%= messages.error %></div>
@@ -52,10 +52,12 @@
                         <th scope="row">Start date </th>
                         <td><%= moment(data[0].start_date).format('Do MMMM, YYYY'); %></td>
                     </tr>
-                    <tr>
-                        <th scope="row">Finish date</th>
-                        <td><%= moment(data[0].finish_date).format('Do MMMM, YYYY'); %></td>
-                    </tr>
+                        <% if (data[0].finish_date != null){ %>
+                        <tr>
+                            <th scope="row">Finish date</th>
+                            <td><%= moment(data[0].finish_date).format('Do MMMM, YYYY'); %></td>
+                        </tr>
+                        <% } %>
                     <tr>
                         <th scope="row">จำนวนปู</th>
                         <td><%= data[0].amount_crab %></td>

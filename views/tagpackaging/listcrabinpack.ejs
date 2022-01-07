@@ -11,11 +11,9 @@
 <body class="container" style="margin-top: 20px;">
      
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- <% if (messages.error) { %>
-        <div class="alert alert-danger" role="alert"><%= messages.error %></div>
-    <% } %> -->
-     
-    
+    <% if (messages.success) { %>
+        <div class="alert alert-success" role="alert"><%= messages.success %></div>
+    <% } %>
 
     <% if (messages.error) { %>
         <div class="alert alert-danger" role="alert"><%= messages.error %></div>
@@ -52,10 +50,12 @@
                         <th scope="row">Start date </th>
                         <td><%= moment(data[0].start_date).format('Do MMMM, YYYY'); %></td>
                     </tr>
+                    <% if (data[0].finish_date != null){ %>
                     <tr>
-                        <th scope="row">Molt date</th>
-                        <td><%= moment(data[0].molt_date).format('Do MMMM, YYYY'); %></td>
+                        <th scope="row">finish date</th>
+                        <td><%= moment(data[0].finish_date).format('Do MMMM, YYYY'); %></td>
                     </tr>
+                    <%   }%>
                     <tr>
                         <th scope="row">Amount crab</th>
                         <td><%= data[0].amount_crab %></td>
