@@ -59,8 +59,12 @@
                         </tr>
                         <% } %>
                     <tr>
+                        <th scope="row">สถานที่เลี้ยง</th>
+                        <td><%= data[0].place %></td>
+                    </tr>
+                    <tr>
                         <th scope="row">จำนวนปู</th>
-                        <td><%= data[0].amount_crab %></td>
+                        <td><%= data[0].amount_crab %>   ตัว</td>
                     </tr>
                     <tr>
                         <th scope="row">status</th>
@@ -112,6 +116,9 @@
                             <label>กรอกจำนวนปู</label>
                             <input type="number" class="form-control" id="amount" name="amount" >  
                             <br>     
+                            <label>สถานที่เลี้ยง</label>
+                            <input type="ะำปะ" class="form-control" id="place" name="place" value="มหาวิทยาลัยสงขลานครินทร์">  
+                            <br>
                             <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-info" value="เริ่มใช้งาน">
                         </div>
                     </form>

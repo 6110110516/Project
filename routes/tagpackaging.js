@@ -264,6 +264,23 @@ router.post('/editamount', (req, res, next) => {
     });
 })
 
+router.post('/editplace', (req, res, next) => {
+    let place = req.body.place;
+    let pack_id = req.query.pack_id;
+    backURL=req.header('Referer') || '/';
+    let sqlt = 'UPDATE order_packaging SET place = "'+place+'" WHERE pack_id = '+pack_id;
+
+    dbCon.query(sqlt, (err, rows) => {
+        if (err) {
+            req.flash('error', err);
+            res.redirect('/data');
+        }else{
+            req.flash('success', 'บันทึกแล้ว');
+            res.redirect(backURL);   
+        }
+    });
+})
+
 router.get('/packagetagoption', (req, res, next) => {
     let pack_id;
     let uid = req.query.uid;
@@ -422,9 +439,10 @@ router.post('/crabstart', (req, res, next) => {
 router.post('/packstart', (req, res, next) => {
     let uid = req.query.uid;
     let amount = req.body.amount
+    let place = req.body.place
     let pack_id;
     let sqlt2;
-    let sqlt1 = 'INSERT INTO order_packaging SET uid = "'+uid+'" , amount_crab = '+amount;
+    let sqlt1 = 'INSERT INTO order_packaging SET uid = "'+uid+'" , amount_crab = '+amount+', place ='+'"'+place+'"' ;
     dbCon.query(sqlt1, (err, result) => {
             if (err) {
                 console.log(err);
@@ -435,7 +453,6 @@ router.post('/packstart', (req, res, next) => {
                 // res.redirect('/data/crabupdate?uid='+uid);
                 pack_id = result.insertId;
                 sqlt2 = 'UPDATE tagnfc_packaging SET pack_id_temp = '+pack_id+' WHERE uid = "'+uid+'"';
-
                 dbCon.query(sqlt2, (err1, rows1) => {
                     if (err1) {
 
@@ -443,8 +460,21 @@ router.post('/packstart', (req, res, next) => {
                         req.flash('error', err1);
                         res.render('scantag/packagetagoption', { uid: uid});
                     }
-                    else
-                        res.redirect('/data/packagetagoption?uid='+uid);
+                    else{
+                        dbCon.query('INSERT INTO update_status SET pack_id = ?, update_pack = "เริ่มใช้งาน"',pack_id, (err2, rows2) => {
+                            if (err2) {
+        
+                                console.log(err2);
+                                req.flash('error', err2);
+                                res.render('scantag/packagetagoption', { uid: uid});
+                            }
+                            else
+                            
+                                res.redirect('/data/packagetagoption?uid='+uid);
+                        });   
+                                                     
+                    }
+                                   
                 });
             }   
         });
