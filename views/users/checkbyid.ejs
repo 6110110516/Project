@@ -26,8 +26,8 @@
         <div class="card-body">
             <form action="/users/check" method="post">
                 <div class="form-group">
-                    <label>Order ID:</label>
-                    <input type="text" class="form-control" name="order_id" value="<%= pack_id %>" autocomplete="off">
+                    <label>Package ID:</label>
+                    <input type="text" style="width: 300px;" class="form-control" name="order_id" value="<%= pack_id %>" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-info" value="ค้นหา">
@@ -41,7 +41,7 @@
                                 <th scope="col">Pack id</th>
                                 <th scope="col">Start date </th>
                                 <th scope="col">Finish date</th>
-                                <th scope="col">จำนวนกล่อง</th>
+                                <th scope="col">จำนวนปู</th>
                                 <!-- <th width="400px"></th> -->
                             </tr>
                         </thead>

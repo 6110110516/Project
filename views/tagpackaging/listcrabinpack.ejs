@@ -42,13 +42,10 @@
                         <th scope="row">Package ID</th>
                         <th ><%= data[0].pack_id %></th>
                     </tr>
+                    
                     <tr>
-                        <th scope="row">tag ID </th>
-                        <td><%= data[0].uid %></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Start date </th>
-                        <td><%= moment(data[0].start_date).format('Do MMMM, YYYY'); %></td>
+                        <th scope="row"> วันที่ลอกคราบ</th>
+                        <td><%= moment(data[0].molt_date).format('Do MMMM, YYYY'); %></td>
                     </tr>
                     <% if (data[0].finish_date != null){ %>
                     <tr>
@@ -71,7 +68,7 @@
                             <%= moment(data_up[i].timestamp).format("HH:mm:ss "+"...."+" DD-MM-YYYY ") %> -- <%=data_up[i].update_pack %>
                             <br>
                             <% } %>
-                            <% if(data[0].statu == 0) {%>
+                            <!-- <% if(data[0].statu == 0) {%>
                                     <a class="btn btn-info">เริ่มใช้งาน</a>
                                 <%} else if(data[0].statu == 1) {%>
                                     <a class="btn btn-success">รอบรรจุ</a>                                                                 
@@ -79,7 +76,7 @@
                                     <a class="btn btn-success">บรรจุแล้ว</a>                         
                                 <%} else {%>                               
                                     <a class="btn btn-secondary"></a>         
-                                <% }%>
+                                <% }%> -->
                         </td>
 
                     </tr>

@@ -33,7 +33,6 @@
                             <!-- <th scope="col">#</th> -->
                             <th scope="col"></th>
                             <th scope="col"></th>
-                            
                             <!-- <th width="400px"></th> -->
                         </tr>
                     </thead>
@@ -42,20 +41,20 @@
                     <!-- <th scope="col">#</th> -->
                     <tr>
                         <th scope="row">Package ID</th>
-                        <th ><%= data[0].pack_id %></th>
+                        <th ><%= data[0].pack_id %> </th>
                     </tr>
                     <tr>
                         <th scope="row">UID tag </th>
                         <td><%= data[0].uid %></td>
                     </tr>
                     <tr>
-                        <th scope="row">Start date </th>
-                        <td><%= moment(data[0].start_date).format('Do MMMM, YYYY'); %></td>
+                        <th scope="row">วันที่ลอกคราบ </th>
+                        <td><%= moment(data[0].molt_date).format('Do MMMM, YYYY'); %></td>
                     </tr>
                         <% if (data[0].finish_date != null){ %>
                         <tr>
-                            <th scope="row">Finish date</th>
-                            <td><%= moment(data[0].finish_date).format('Do MMMM, YYYY'); %></td>
+                            <th scope="row">Finish date </th>
+                            <td><%= moment(data[0].finish_date).format('Do MMMM, YYYY'); %></td> 
                         </tr>
                         <% } %>
                     <tr>
@@ -70,7 +69,7 @@
                         <th scope="row">status</th>
                         <td>
                             <% for(i=0;i< data_up.length; i++) {%>
-                            <%= moment(data_up[i].timestamp).format("HH:mm:ss "+"...."+" DD-MM-YYYY ") %> -- <%=data_up[i].update_pack %>
+                            <%= moment(data_up[i].timestamp).format("HH:mm:ss "+"น.---"+" Do-MMMM-YYYY ") %> -- <%=data_up[i].update_pack %>
                             <br>
                             <% } %>
     
@@ -84,9 +83,9 @@
             <% } %>
 
             <!-- if result is empty -->
-            <% if(!data.length) { %>
+            <!-- <% if(!data.length) { %>
                 <p class="text-center">No Order found!</p>
-            <% } %>
+            <% } %> -->
             <ul class="nav nav-pills w-100">
                 <% if(data.length) { %>
                     <% if(data[0].statu == 0) { %>
@@ -115,9 +114,12 @@
                         <div class="form-grup">
                             <label>กรอกจำนวนปู</label>
                             <input type="number" class="form-control" id="amount" name="amount" >  
-                            <br>     
+                            <br>   
+                            <label>วันที่ลอกคราบ</label>
+                            <input type="date" class="form-control" id="date_molt" name="date_molt" >  
+                            <br>    
                             <label>สถานที่เลี้ยง</label>
-                            <input type="ะำปะ" class="form-control" id="place" name="place" value="มหาวิทยาลัยสงขลานครินทร์">  
+                            <input type="text" class="form-control" id="place" name="place" value="มหาวิทยาลัยสงขลานครินทร์">  
                             <br>
                             <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-info" value="เริ่มใช้งาน">
                         </div>

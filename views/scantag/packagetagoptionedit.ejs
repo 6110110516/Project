@@ -49,8 +49,16 @@
                         <td><%= data[0].uid %></td>
                     </tr>
                     <tr>
-                        <th scope="row">Start date </th>
-                        <td><%= moment(data[0].start_date).format('Do MMMM, YYYY'); %></td>
+                        <th scope="row">วันที่ลอกคราบ </th>
+                        <td>
+                            <form action="/data/editmoltdate?pack_id=<%= data[0].pack_id %>" method="post">
+                                <div class="form-grup">
+                                    <input type="date" style="width: 300px;" class="form-control" id="molt_date" name="molt_date" value="<%= moment(data[0].molt_date).format('YYYY-MM-DD'); %>" autocomplete="off">      
+                                    <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-link" value="บันทึก">
+                                </div>
+                            </form>    
+                        </td>
+                        
                     </tr>
                     
 
@@ -66,7 +74,7 @@
                             <form action="/data/editplace?pack_id=<%= data[0].pack_id %>" method="post">
                                 <div class="form-grup">
                                     <input type="text" style="width: 300px;" class="form-control" id="place" name="place" value="<%= data[0].place %>" autocomplete="off">      
-                                    <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-info" value="บันทึก">
+                                    <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-link" value="บันทึก">
                                 </div>
                             </form>    
                         </td>
@@ -78,7 +86,7 @@
                             <form action="/data/editamount?pack_id=<%= data[0].pack_id %>" method="post">
                                 <div class="form-grup">
                                     <input type="number" style="width: 100px;" class="form-control" id="amount" name="amount" value="<%= data[0].amount_crab %>" autocomplete="off">      
-                                    <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-info" value="บันทึก">
+                                    <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-link" value="บันทึก">
                                 </div>
                             </form>
                         </td>
@@ -88,7 +96,7 @@
                         <td>
                             <% for(i=0;i< data_up.length; i++) {%>
                             <a style="color: red" href="/data/deleteupstatus?num=<%= data_up[i].num %>" onclick="return confirm('Are you sure?')">  ลบ </a>
-                            <%= moment(data_up[i].timestamp).format("HH:mm:ss "+"...."+" DD-MM-YYYY ") %> -- <%=data_up[i].update_pack %>
+                            <%= moment(data_up[i].timestamp).format("HH:mm:ss "+"...."+" Do-MMMM-YYYY ") %> -- <%=data_up[i].update_pack %>
                             
                             <br>
                             <% } %>

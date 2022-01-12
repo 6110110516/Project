@@ -281,6 +281,23 @@ router.post('/editplace', (req, res, next) => {
     });
 })
 
+router.post('/editmoltdate', (req, res, next) => {
+    let molt_date = req.body.molt_date;
+    let pack_id = req.query.pack_id;
+    backURL=req.header('Referer') || '/';
+    let sqlt = 'UPDATE order_packaging SET molt_date = "'+molt_date+'" WHERE pack_id = '+pack_id;
+
+    dbCon.query(sqlt, (err, rows) => {
+        if (err) {
+            req.flash('error', err);
+            res.redirect('/data');
+        }else{
+            req.flash('success', 'บันทึกแล้ว');
+            res.redirect(backURL);   
+        }
+    });
+})
+
 router.get('/packagetagoption', (req, res, next) => {
     let pack_id;
     let uid = req.query.uid;
@@ -296,10 +313,12 @@ router.get('/packagetagoption', (req, res, next) => {
             dbCon.query('SELECT * FROM order_packaging WHERE pack_id = "?"',pack_id, (err, rows) => {
                 if (err) {
                     console.log(err);
+                    
                     req.flash('error', err);
                     res.redirect('/data');
                 }
                 else
+            
                     if(pack_id == null){
                         res.render('scantag/packagetagoption', { uid: uid,data: rows});
                     }
@@ -309,6 +328,7 @@ router.get('/packagetagoption', (req, res, next) => {
                                 req.flash('error', err2);
                                 res.redirect('/data');
                             }else{
+
                                 res.render('scantag/packagetagoption', { uid: uid,data: rows,data_up: rows2 , moment: moment});
                             }
                         });  
@@ -440,9 +460,12 @@ router.post('/packstart', (req, res, next) => {
     let uid = req.query.uid;
     let amount = req.body.amount
     let place = req.body.place
+    let date_molt = req.body.date_molt
     let pack_id;
     let sqlt2;
-    let sqlt1 = 'INSERT INTO order_packaging SET uid = "'+uid+'" , amount_crab = '+amount+', place ='+'"'+place+'"' ;
+    
+
+    let sqlt1 = 'INSERT INTO order_packaging SET uid = "'+uid+'" , amount_crab = '+amount+', place ='+'"'+place+'",molt_date = "'+date_molt+'"' ;
     dbCon.query(sqlt1, (err, result) => {
             if (err) {
                 console.log(err);
