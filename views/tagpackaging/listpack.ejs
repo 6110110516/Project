@@ -36,8 +36,8 @@
                             <th scope="col">Start date </th>
                             <th scope="col">Finish date</th>
                             <th scope="col">จำนวนปู</th>
-                            <th scope="col">order id</th>
-                            <th scope="col">status</th>
+                            
+                            <!-- <th scope="col">status</th> -->
                             <!-- <th width="400px"></th> -->
                         </tr>
                     </thead>
@@ -49,8 +49,8 @@
                                 <td><%= moment(data[i].start_date).format('Do MMMM, YYYY'); %></td>
                                 <td><%= moment(data[i].finish_date).format('Do MMMM, YYYY'); %></td>
                                 <td><%= data[i].amount_crab %></td>
-                                <td><%= data[i].order_id %></td>
-                                <% if(data[i].statu == 0) {%>
+                                
+                                <!-- <% if(data[i].statu == 0) {%>
                                 <td> 
                                     <a class="btn btn-info">กำลังจัดเตรียม</a>
                                 </td>
@@ -66,7 +66,7 @@
                                 <td> 
                                     <a class="btn btn-secondary"></a>
                                 </td>
-                                <% }%>
+                                <% }%> -->
                             </tr>
                         <% } %>
                     </tbody>
