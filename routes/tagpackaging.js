@@ -463,8 +463,11 @@ router.post('/packstart', (req, res, next) => {
     let date_molt = req.body.date_molt
     let pack_id;
     let sqlt2;
-    let date_ = new Date();
-    let start_date = moment(date_).format("YYYY-MM-DD HH:mm:ss")
+    let date_ = new Date();    
+    let date_tz = date_.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' })
+    let start_date = moment(date_tz).format("YYYY-MM-DD HH:mm:ss")
+
+    // let start_date = date_tz.clone().tz('America/New_York')
     console.log(start_date);
     console.log(date_molt);
 
@@ -576,8 +579,9 @@ router.post('/updata', (req, res, next) => {
     let sqlt;
     let errors = false;
     let txt;
-    let date_ = new Date();
-    let start_date = moment(date_).format("YYYY-MM-DD HH:mm:ss")
+    let date_ = new Date();    
+    let date_tz = date_.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' })
+    let start_date = moment(date_tz).format("YYYY-MM-DD HH:mm:ss")
     console.log(start_date);
     
     if((reason == 0  &&updatetxt.length === 0 )||reason == null){
