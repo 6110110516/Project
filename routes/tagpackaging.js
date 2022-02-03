@@ -328,7 +328,7 @@ router.get('/packagetagoption', (req, res, next) => {
                                 req.flash('error', err2);
                                 res.redirect('/data');
                             }else{
-
+                                // console.log(rows2[0].timestamp);
                                 res.render('scantag/packagetagoption', { uid: uid,data: rows,data_up: rows2 , moment: moment});
                             }
                         });  
@@ -463,7 +463,10 @@ router.post('/packstart', (req, res, next) => {
     let date_molt = req.body.date_molt
     let pack_id;
     let sqlt2;
-    let start_date = new  Date();
+    let date_ = new Date();
+    let start_date = moment(date_).format("YYYY-MM-DD HH:mm:ss")
+    console.log(start_date);
+    console.log(date_molt);
 
     let sqlt1 = 'INSERT INTO order_packaging SET uid = "'+uid+'" , amount_crab = '+amount+', place ='+'"'+place+'",molt_date = "'+date_molt+'",start_date = "'+start_date+'"' ;
     dbCon.query(sqlt1, (err, result) => {
@@ -484,7 +487,8 @@ router.post('/packstart', (req, res, next) => {
                         res.render('scantag/packagetagoption', { uid: uid});
                     }
                     else{
-                        dbCon.query('INSERT INTO update_status SET pack_id = ?, update_pack = "เริ่มใช้งาน"',pack_id, (err2, rows2) => {
+                        let sqltext = 'INSERT INTO update_status SET pack_id = '+pack_id+', update_pack = "เริ่มใช้งาน", timestamp = "'+start_date+'"'
+                        dbCon.query(sqltext, (err2, rows2) => {
                             if (err2) {
         
                                 console.log(err2);
@@ -572,6 +576,10 @@ router.post('/updata', (req, res, next) => {
     let sqlt;
     let errors = false;
     let txt;
+    let date_ = new Date();
+    let start_date = moment(date_).format("YYYY-MM-DD HH:mm:ss")
+    console.log(start_date);
+    
     if((reason == 0  &&updatetxt.length === 0 )||reason == null){
         errors = true;
         // set flash message
@@ -593,7 +601,7 @@ router.post('/updata', (req, res, next) => {
             res.redirect('/data/packupdate?pack_id='+pack_id); 
         }    
         console.log(txt);
-        sqlt = 'INSERT INTO update_status SET pack_id = '+pack_id+', update_pack = "'+txt+'"';
+        sqlt = 'INSERT INTO update_status SET pack_id = '+pack_id+', update_pack = "'+txt+'",timestamp = "'+start_date+'"';
         dbCon.query(sqlt, (err, result) => {
                 if (err) {
                     console.log(err);
