@@ -463,9 +463,9 @@ router.post('/packstart', (req, res, next) => {
     let date_molt = req.body.date_molt
     let pack_id;
     let sqlt2;
-    
+    let start_date = new  Date();
 
-    let sqlt1 = 'INSERT INTO order_packaging SET uid = "'+uid+'" , amount_crab = '+amount+', place ='+'"'+place+'",molt_date = "'+date_molt+'",start_date = CURRENT_TIMESTAMP' ;
+    let sqlt1 = 'INSERT INTO order_packaging SET uid = "'+uid+'" , amount_crab = '+amount+', place ='+'"'+place+'",molt_date = "'+date_molt+'",start_date = '+start_date ;
     dbCon.query(sqlt1, (err, result) => {
             if (err) {
                 console.log(err);
