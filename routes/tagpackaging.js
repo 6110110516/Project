@@ -588,7 +588,7 @@ router.post('/updata', (req, res, next) => {
         errors = true;
         // set flash message
         req.flash('error', 'กรอกข้อมูลให้ครบ');
-        res.redirect('/data/packupdate?pack_id='+pack_id); 
+        res.redirect('/data/packupdate?uid='+uid+'&pack_id='+pack_id);
     }
 
     if(!errors){
@@ -602,7 +602,7 @@ router.post('/updata', (req, res, next) => {
         else{
             console.log("กรอกข้อมูลให้ครบ");
             req.flash('error', "กรอกข้อมูลให้ครบ");
-            res.redirect('/data/packupdate?pack_id='+pack_id); 
+            res.redirect('/data/packupdate?uid='+uid+'&pack_id='+pack_id);
         }    
         console.log(txt);
         sqlt = 'INSERT INTO update_status SET pack_id = '+pack_id+', update_pack = "'+txt+'",timestamp = "'+start_date+'"';
@@ -610,7 +610,7 @@ router.post('/updata', (req, res, next) => {
                 if (err) {
                     console.log(err);
                     req.flash('error', err);
-                    res.redirect('/data/packupdate?pack_id='+pack_id);
+                    res.redirect('/data/packupdate?uid='+uid+'&pack_id='+pack_id);
                 }
                 else{
                     req.flash('success', 'บันทึกแล้ว');
