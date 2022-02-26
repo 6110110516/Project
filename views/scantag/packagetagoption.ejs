@@ -1,6 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="en">
+    
 <head>
+    
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,6 +69,14 @@
                         <td><%= data[0].amount_crab %>   ตัว</td>
                     </tr>
                     <tr>
+                        <% if(data[0].weight != null) {%>
+                        <th scope="row">น้ำหนัก</th>
+                        
+                        
+                            <td><%= data[0].weight %>   กิโลกรัม</td>
+                        <% } %>
+                    </tr>
+                    <tr>
                         <th scope="row">status</th>
                         <td>
                             <% for(i=0;i< data_up.length; i++) {%>
@@ -76,10 +87,14 @@
                         </td>
 
                     </tr>
-                    <!-- <th width="400px"></th> -->
+                    <th >
+                        <a href="/data/packagetagoption/more?uid=<%= data[0].uid %>">ดูข้อมูลปูเพิ่มเติม</a>
+                    </th>
                     
-                    </tbody>                                                                                                                                              
+                    </tbody>        
+                                                                                                                                                          
                </table>
+              
             <% } %>
 
             <!-- if result is empty -->
@@ -129,6 +144,6 @@
             </ul>
         </div>
     </div>
-
+    
 </body>
 </html>

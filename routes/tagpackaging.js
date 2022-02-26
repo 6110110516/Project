@@ -264,6 +264,24 @@ router.post('/editamount', (req, res, next) => {
     });
 })
 
+router.post('/editweight', (req, res, next) => {
+    let weight = req.body.weight;
+    let pack_id = req.query.pack_id;
+    backURL=req.header('Referer') || '/';
+    let sqlt = 'UPDATE order_packaging SET weight = "'+weight+'" WHERE pack_id = '+pack_id;
+
+    dbCon.query(sqlt, (err, rows) => {
+        if (err) {
+            console.log(weight+"--"+pack_id)
+            req.flash('error', err);
+            res.redirect('/data');
+        }else{
+            req.flash('success', 'บันทึกแล้ว');
+            res.redirect(backURL);   
+        }
+    });
+})
+
 router.post('/editplace', (req, res, next) => {
     let place = req.body.place;
     let pack_id = req.query.pack_id;
@@ -333,6 +351,22 @@ router.get('/packagetagoption', (req, res, next) => {
                             }
                         });  
             });
+        }
+    });
+})   
+
+router.get('/packagetagoption/more', (req, res, next) => {
+    let pack_id;
+    let uid = req.query.uid;
+    
+    dbCon.query('SELECT * FROM tagnfc_packaging WHERE uid = ?',uid, (err, rows) => {
+        if (err ) {
+            console.log(err);
+            req.flash('error', err);
+            res.redirect('/data');
+        }
+        else{
+            res.render('scantag/infomore',{uid:uid});
         }
     });
 })   

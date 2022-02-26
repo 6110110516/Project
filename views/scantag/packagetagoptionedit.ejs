@@ -91,6 +91,20 @@
                             </form>
                         </td>
                     </tr>
+
+                    <tr>
+                        <th scope="row">น้ำหนัก</th>
+                        
+                        <td>
+                            <form action="/data/editweight?pack_id=<%= data[0].pack_id %>" method="post">
+                                <div class="form-grup">
+                                    <input type="number" style="width: 100px;" class="form-control" id="weight" name="weight" value="<%= data[0].weight %>" autocomplete="off">      
+                                    <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-link" value="บันทึก">
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+
                     <tr>
                         <th scope="row">status</th>
                         <td>
@@ -102,8 +116,9 @@
                             <% } %>
     
                         </td>
-
                     </tr>
+
+
                     <!-- <th width="400px"></th> -->
                     
                     </tbody>                                                                                                                                              
