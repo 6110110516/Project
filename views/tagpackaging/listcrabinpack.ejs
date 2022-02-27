@@ -68,6 +68,14 @@
                         <td><%= data[0].amount_crab %> ตัว</td>
                     </tr>
                     <tr>
+                        <th scope="row">น้ำหนัก</th>
+                        <% if(data[0].weight != null ) {%>
+                        <td><%= data[0].weight %> กิโลกรัม</td>
+                        <% } else {%>
+                        <td> -- </td>
+                        <% } %>
+                    </tr>
+                    <tr>
                         <th scope="row">status</th>
                         <td>
                             <% for(i=0;i< data_up.length; i++) {%>
