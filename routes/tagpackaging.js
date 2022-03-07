@@ -213,7 +213,7 @@ router.get('/deletepack', (req, res, next) => {
             res.redirect('/data');
         }else{
             req.flash('success', 'tagNFC successfully deleted');
-            res.redirect('/data');
+            res.redirect('/packagetagoption');
         }
     });
 })
@@ -230,6 +230,35 @@ router.get('/deletepacklist', (req, res, next) => {
                 res.redirect(backURL);   
             }
         });
+})
+
+router.get('/endpack', (req, res, next) => {
+    let uid = req.query.uid;
+    let pack_id = req.query.pack_id;
+    let txt = "สิ้นสุดการใช้งาน";
+    let date_ = new Date();    
+    let date_tz = date_.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' })
+    let start_date = moment(date_tz).format("YYYY-MM-DD HH:mm:ss")
+
+    backURL=req.header('Referer') || '/';
+        sqlt = 'INSERT INTO update_status SET pack_id = '+pack_id+', update_pack = "'+txt+'",timestamp = "'+start_date+'"';
+        dbCon.query(sqlt, (err, rows) => {
+            if (err) {
+                req.flash('error', err);
+                res.redirect('/data');
+            }else{
+                dbCon.query('UPDATE tagnfc_packaging SET pack_id_temp = null WHERE pack_id_temp = ?',pack_id, (err, rows) => {
+                    if (err) {
+                        req.flash('error', err);
+                        res.redirect('/data');
+                    }else{
+                        req.flash('success', 'tagNFC successfully deleted');
+                        res.redirect('packagetagoption?uid='+uid);
+                    }
+                }); 
+            }
+        });
+
 })
 
 router.get('/deleteupstatus', (req, res, next) => {
