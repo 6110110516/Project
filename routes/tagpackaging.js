@@ -4,6 +4,25 @@ let dbCon = require('../lib/db');
 var moment = require('moment');
 const e = require('express');
 var axios = require('axios');
+const cookieParser = require("cookie-parser");
+var session = require('express-session');
+var path = require('path');
+const bodyParser = require('body-parser');
+var app = express();
+
+const expiresTime = 1000 * 60 *3;
+
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    // cookie: { maxAge: expiresTime },
+    saveUninitialized: true
+
+}));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
 
 router.get('/', (req, res, next) => {
     dbCon.query('SELECT * FROM tagnfc_packaging ORDER BY uid', (err, rows) => {
@@ -16,24 +35,67 @@ router.get('/', (req, res, next) => {
     })
 })
 
-router.get('/farmtag', (req, res, next) => {
-    dbCon.query('SELECT * FROM tagnfc_farm ORDER BY uid', (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.render('tagpackaging/farmtag', { data: ''});
-        }else{
-            res.render('tagpackaging/farmtag', { data: rows });
-        }
-    })
-})
+router.post('/auth', (req,res) => {
+    var username = req.body.username;
+    var password = req.body.password;
+    let backURL = req.query.backurl;
+    // console.log(username);
+    // console.log(password);
+    
+
+    let sqlt = 'SELECT * FROM accounts WHERE username = "'+username+'" AND password = PASSWORD("'+password+'")';
+    if (username && password) {
+        dbCon.query(sqlt , (err, results, fields) => {
+            console.log(results[0].username);
+
+            if (results.length > 0) {
+                req.session.loggedin = true;
+                req.session.username = username;
+                req.session.cookie.maxAge = expiresTime;
+                req.flash('success','Welcome back,'+req.session.username+'!');
+                res.redirect(backURL);
+            }else{
+                console.log(backURL+"vิอิ");
+                req.flash('error','Incorrect Username or Password');
+                res.redirect('/login?backurl='+backURL);
+            }
+            
+        });
+    }else {
+        
+        console.log(backURL+"vิอิ/");
+        req.flash('error','Please enter Username and Password!');
+        res.redirect('/login?backurl='+backURL);
+    }
+
+});
+
+router.get('/logout', (req, res) => {
+    if(req.session.loggedin){
+        req.session.destroy(function (err){
+            console.log("logout!");
+            res.redirect('/')
+        });
+    }else{
+        res.redirect('/')
+    }    
+    
+});
 
 router.get('/add', (req, res, next) => {
+    if(req.session.loggedin){
+        console.log(req.session.username+"  loggedin");
+        console.log(req.session)
     try {
         res.render('tagpackaging/add', {
             uid: req.query.uid
         })
     } catch(e){
         next(e);
+    }
+    }else {
+        console.log(req.session)
+        res.redirect('/login');
     }
 })
 
@@ -92,118 +154,6 @@ router.get('/listpack', (req, res, next) => {
     });
 })
 
-router.get('/listpacking', (req, res, next) => {
-    let crab_id = req.query.crab_id;
-    dbCon.query('SELECT * FROM order_packaging WHERE statu = 0 ORDER BY pack_id DESC', (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.render('tagpackaging/listpacking', { data: ''});
-        }else{
-            res.render('tagpackaging/listpacking', { crab_id: crab_id ,data: rows , moment: moment});
-        }
-    });
-})
-
-router.get('/listordering', (req, res, next) => {
-    let pack_id = req.query.pack_id;
-    dbCon.query('SELECT * FROM order_list WHERE statu = 0 ORDER BY order_id DESC', (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.render('tagpackaging/listordering', { data: ''});
-        }else{
-            res.render('tagpackaging/listordering', { pack_id: pack_id ,data: rows , moment: moment});
-        }
-    });
-})
-
-router.get('/listorder', (req, res, next) => {
-
-    dbCon.query('SELECT * FROM order_list ORDER BY order_id DESC', (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.render('tagpackaging/listorder', { data: ''});
-        }else{
-            res.render('tagpackaging/listorder', { data: rows , moment: moment});
-        }
-    });
-})
-
-router.get('/listcrab', (req, res, next) => {
-
-    dbCon.query('SELECT * FROM crab_farm ORDER BY crab_id DESC', (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.render('tagpackaging/listcrab', { data: ''});
-        }else{
-            res.render('tagpackaging/listcrab', { data: rows , moment: moment});
-        }
-    });
-})
-
-router.get('/listpackino', (req, res, next) => {
-    let order_id = req.query.order_id;
-    dbCon.query('SELECT * FROM order_packaging WHERE order_id = ?',order_id, (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.render('tagpackaging/listpackinorder', { order_id: order_id,data: ''});
-        }else{
-            res.render('tagpackaging/listpackinorder', { order_id:order_id,data: rows , moment: moment});
-        }
-    });
-})
-
-router.get('/listcrabinp', (req, res, next) => {
-    let pack_id = req.query.pack_id;
-    dbCon.query('SELECT * FROM order_packaging WHERE pack_id = ?',pack_id, (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.render('tagpackaging/listcrabinpack', { data: ''});
-        }else{
-            dbCon.query('SELECT * FROM update_status WHERE pack_id = ? ORDER BY num',pack_id, (err, rows2) => {
-                if (err) {
-                    req.flash('error', err);
-                    res.render('tagpackaging/listcrabinpack', {  data: rows , moment: moment});
-                }else{
-                    res.render('tagpackaging/listcrabinpack', { data: rows , data_up: rows2, moment: moment});
-                }
-            });        
-        }
-    });
-})
-
-router.get('/deletecrab', (req, res, next) => {
-    let uid = req.query.uid;
-    dbCon.query('DELETE FROM tagnfc_farm WHERE uid = ?',uid, (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.redirect('/data/farmtag');
-        }else{
-            req.flash('success', 'tagNFC successfully deleted');
-            res.redirect('/data/farmtag');        }
-    });
-})
-
-router.get('/deletecrablist', (req, res, next) => {
-    let crab_id = req.query.crab_id;
-    backURL=req.header('Referer') || '/';
-    dbCon.query('DELETE FROM crab_farm WHERE crab_id = ?',crab_id, (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.redirect('/data/listcrab');
-        }else{
-            dbCon.query('UPDATE tagnfc_farm SET crab_id_temp = null WHERE crab_id_temp = ?',crab_id, (err, rows) => {
-                if (err) {
-                    req.flash('error', err);
-                    res.redirect('/data');
-                }else{
-                    req.flash('success', 'tagNFC successfully deleted');
-                    res.redirect(backURL);   
-                }
-            });
-                 
-        }
-    });
-})
 
 router.get('/deletepack', (req, res, next) => {
     let uid = req.query.uid;
@@ -684,74 +634,6 @@ router.post('/updata', (req, res, next) => {
     }
 })  
 
-router.get('/packing', (req, res, next) => {
-    let crab_id = req.query.crab_id;
-    let pack_id = req.query.pack_id
 
-    let sqlt = "UPDATE crab_farm SET statu = 2, pack_id = "+pack_id+" WHERE crab_id = "+crab_id;
-    dbCon.query(sqlt, (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.redirect('/data/farmtag');
-        }else{
-
-            dbCon.query('SELECT * FROM order_packaging WHERE pack_id = ?',pack_id, (err1, rows1) => {
-                if (err1) {
-                    console.log(err1);
-                    req.flash('error', err1);
-                    res.redirect('/data/farmtag');
-                }
-                else
-                // console.log();
-                sqlt = "UPDATE order_packaging SET amount_crab = "+(rows1[0].amount_crab+1)+" WHERE pack_id = "+pack_id;
-                dbCon.query(sqlt, (err2, rows2) => {
-                    if (err2) {
-                        req.flash('error', err2);
-                        res.redirect('/data/farmtag');
-                    }else{
-                        req.flash('success', ' successfully ');
-                        res.redirect('/data/listcrabinp?pack_id='+pack_id);
-                    }
-                });    
-            });
-                
-        }
-    });
-})
-
-router.get('/ordering', (req, res, next) => {
-    let order_id = req.query.order_id;
-    let pack_id = req.query.pack_id
-    let sqlt = "UPDATE order_packaging SET statu = 2, order_id = "+order_id+" WHERE pack_id = "+pack_id;
-                    console.log(sqlt);
-    dbCon.query(sqlt, (err, rows) => {
-        if (err) {
-            req.flash('error', err);
-            res.redirect('/data');
-        }else{
-
-            dbCon.query('SELECT * FROM order_list WHERE order_id = ?',order_id, (err1, rows1) => {
-                if (err1) {
-                    console.log(err1);
-                    req.flash('error', err1);
-                    res.redirect('/data');
-                }
-                else
-                // console.log();
-                sqlt = "UPDATE order_list SET pack_amount = "+(rows1[0].pack_amount+1)+" WHERE order_id = "+order_id;
-                dbCon.query(sqlt, (err2, rows2) => {
-                    if (err2) {
-                        req.flash('error', err2);
-                        res.redirect('/data');
-                    }else{
-                        req.flash('success', ' successfully ');
-                        res.redirect('/data/listpackino?order_id='+order_id);
-                    }
-                });    
-            });
-                
-        }
-    });
-})
 
 module.exports = router;
