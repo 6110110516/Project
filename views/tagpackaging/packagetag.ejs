@@ -26,7 +26,12 @@
     <div class="card">
         <div class="card-header">
             <%include ../tabmenu/menu %>
-            <ul class="nav-link">List TagNFC</ul>
+            <ul class="nav nav-pills w-100">
+                <li class="nav-link">List TagNFC</li>
+                <li class="nav-link ml-auto"> 
+                    <a href="/data/logout" class="btn btn-info">Sign out</a>
+                </li> 
+            </ul>
         </div>
         <div class="card-body">
             <% if(data.length) { %>

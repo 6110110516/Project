@@ -19,9 +19,10 @@ router.get('/', (req, res, next) => {
                         res.redirect('/data/farmtag');
                     }else{
                         if(rows2.length === 0)
-                            res.render('tagpackaging/add', {
-                                uid: req.query.uid
-                            })
+                            res.redirect('/data/add?uid='+uid);
+                            // es.render('tagpackaging/add', {
+                            //     uid: req.query.uid
+                            // })r
                         else
                         res.redirect('/data/farmtagoption?uid='+uid);
                     }

@@ -13,16 +13,21 @@ router.get('/', function(req, res, next) {
   res.redirect('/data');
 });
 
-router.get('/login', function(req, res, next) {
-  // let backURL;
-  if(req.query.backURL ){
-    backURL = req.query.backurl;
-  }
-  else{
-    backURL = req.header('Referer') || '/';
-  }
-  console.log(backURL);
-  res.render('login',{backURL: backURL});
-});
+// router.get('/login', function(req, res, next) {
+//   let backURL;
+//   if(req.session.loggedin)
+//     res.redirect('/data');
+//   if(req.query.backurl ){
+    
+//     backURL = req.query.backurl;
+  
+//   }
+//   else{
+//     backURL = req.header('Referer') || '/';
+ 
+//   }
+//   console.log(backURL);
+//   res.render('login',{backURL: backURL});
+// });
 
 module.exports = router;
