@@ -76,6 +76,25 @@ router.post('/check',(req, res, next) => {
   }
 })
 
+router.get('/listcrabinp', (req, res, next) => {
+  let pack_id = req.query.pack_id;
+  dbCon.query('SELECT * FROM order_packaging WHERE pack_id = ?',pack_id, (err, rows) => {
+      if (err) {
+          req.flash('error', err);
+          res.render('tagpackaging/listcrabinpack', { data: ''});
+      }else{
+          dbCon.query('SELECT * FROM update_status WHERE pack_id = ? ORDER BY num',pack_id, (err, rows2) => {
+              if (err) {
+                  req.flash('error', err);
+                  res.render('tagpackaging/listcrabinpack', {  data: rows , moment: moment});
+              }else{
+                  res.render('tagpackaging/listcrabinpack', { data: rows , data_up: rows2, moment: moment});
+              }
+          });        
+      }
+  });
+})
+
 // router.post('/check',(req, res, next) => {
 //   let order_id = req.body.order_id;
 //   let errors = false;
