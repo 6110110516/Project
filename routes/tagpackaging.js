@@ -10,7 +10,7 @@ var path = require('path');
 const bodyParser = require('body-parser');
 var app = express();
 
-const expiresTime = 1000 * 60 *3;
+const expiresTime = 1000 * 60 *15;
 
 app.use(session({
     secret: 'secret',
@@ -386,7 +386,17 @@ router.get('/packagetagoption', (req, res, next) => {
                                     res.redirect('/data');
                                 }else{
                                     // console.log(rows2[0].timestamp);
-                                    res.render('scantag/packagetagoption', { uid: uid,data: rows,data_up: rows2 , moment: moment});
+                                    dbCon.query('SELECT * FROM info_list WHERE id = ?',rows[0].place_id, (err, rows3) => {
+                                        if (err) {
+                                            req.flash('error', err);
+                                            res.render('scantag/packagetagoption', { data: rows , data_up: rows2, moment: moment});
+                                        }else{
+                                            res.render('scantag/packagetagoption', { uid: uid,data: rows , data_up: rows2 ,place: rows3[0].name_place, moment: moment});
+                                            
+                                  
+                                        }
+                                      });
+                         
                                 }
                             });  
                 });
@@ -441,7 +451,17 @@ router.get('/packagetagoption/edit', (req, res, next) => {
                                 req.flash('error', err2);
                                 res.redirect('/data');
                             }else{
-                                res.render('scantag/packagetagoptionedit', { uid: uid,data: rows,data_up: rows2 , moment: moment});
+                                dbCon.query('SELECT * FROM info_list WHERE id = ?',rows[0].place_id, (err, rows3) => {
+                                    if (err) {
+                                        req.flash('error', err);
+                                        res.render('scantag/packagetagoptionedit', { data: rows , data_up: rows2, moment: moment});
+                                    }else{
+                                        res.render('scantag/packagetagoptionedit', { uid: uid,data: rows , data_up: rows2 ,place: rows3[0].name_place, moment: moment});
+                                        
+                              
+                                    }
+                                });
+                                
                             }
                         });  
                 });
@@ -555,7 +575,7 @@ router.post('/packstart', (req, res, next) => {
         console.log(start_date);
         console.log(date_molt);
 
-        let sqlt1 = 'INSERT INTO order_packaging SET uid = "'+uid+'" , amount_crab = '+amount+', place ='+'"'+place+'",molt_date = "'+date_molt+'",start_date = "'+start_date+'"' ;
+        let sqlt1 = 'INSERT INTO order_packaging SET uid = "'+uid+'" , amount_crab = '+amount+', place_id ='+place+',molt_date = "'+date_molt+'",start_date = "'+start_date+'"' ;
         dbCon.query(sqlt1, (err, result) => {
                 if (err) {
                     console.log(err);

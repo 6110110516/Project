@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>package Tag</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body class="container" style="margin-top: 20px;">
+     
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <% if (messages.success) { %>
+        <div class="alert alert-success" role="alert"><%= messages.success %></div>
+    <% } %>
+
+    <% if (messages.error) { %>
+        <div class="alert alert-danger" role="alert"><%= messages.error %></div>
+    <% } %>
+    
+    <div class="card">
+        <div class="card-header">
+            
+            <ul class="nav nav-pills w-100">
+                <li class="nav-link">ข้อมูลแหล่งผลิต </li>
+                <li class="nav-link ml-auto">
+                    <a href="/users"  class="btn btn-info">Back</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <% if(data.length) { %>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <!-- <th scope="col">#</th> -->
+                            <th scope="col"></th>
+                            <th scope="col" width="75%"></th>
+                            
+                            <!-- <th width="1100px"></th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                            
+                    <!-- <th scope="col">#</th> -->
+                    <tr>
+                        <th scope="row">สถานที่เลี้ยง</th>
+                        <th ><%= data[0].name_place %></th>
+                    </tr>
+                    
+                    <tr>
+                        <th scope="row"> ที่อยู่</th>
+                        <td><%= data[0].address %></td>
+                    </tr>
+                    
+                    <tr>
+                        <th scope="row">แหล่งที่มาของปู</th>
+                        <td><%= data[0].crab_info %></td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">ชนิดปู</th>
+                        <td><%= data[0].crab_info2 %> </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">ข้อมูลเพิ่มเติม</th>
+                        <td><%= data[0].description %></td>
+                    </tr>
+                    
+                                        
+                   </tbody>                                                                                                                                              
+               </table>
+            <% } %>
+
+            <!-- if result is empty -->
+            <% if(!data.length) { %>
+                <p class="text-center">No Order found!</p>
+
+            <% } %>
+            
+        </div>
+        
+    </div>
+
+</body>
+</html>

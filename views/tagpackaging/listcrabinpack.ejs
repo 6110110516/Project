@@ -61,7 +61,7 @@
                     <%   }%>
                     <tr>
                         <th scope="row">สถานที่เลี้ยง</th>
-                        <td><%= data[0].place %></td>
+                        <td><%= place %></td>
                     </tr>
                     <tr>
                         <th scope="row">จำนวนปู</th>
@@ -95,8 +95,10 @@
 
                     </tr>
                    
+                    <th >
+                        <a href="/users/infofarm?id=<%= data[0].place_id %>">ดูข้อมูลฟาร์มเพิ่มเติม</a>
+                    </th>
 
-                    
 
                    </tbody>                                                                                                                                              
                </table>
@@ -107,22 +109,7 @@
                 <p class="text-center">No Order found!</p>
 
             <% } %>
-            <ul class="nav nav-pills w-100">
-                <% if(data.length) { %>
-                
-                <% } %>
-                <% if(!data.length) { %>
-                    <form action="/data/crabstart?uid=<%= uid %>" method="post"  >           
-                        <div class="form-group">
-                            <label>กรอกจำนวนปู</label>
-                            <input type="number" class="form-control" id="amount" name="amount" >  
-                            <br>     
-                            <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-info" value="เริ่มใช้งาน">
-                        </div>
-                    </form>
-
-                <% } %>
-            </ul>
+            
         </div>
         
     </div>

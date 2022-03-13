@@ -48,7 +48,7 @@
                         <tbody>
                             <% for(let i = 0; i < data.length; i++) { %>
                                 <tr>
-                                    <th scope="row"><a  href="../users/listcrabinp?pack_id=<%= data[i].pack_id %>" ><%= data[i].pack_id %></a></th>
+                                    <th scope="row"><a  href="../users/infoinp?pack_id=<%= data[i].pack_id %>" ><%= data[i].pack_id %></a></th>
                                     <td><%= moment(data[i].start_date).format('Do MMMM, YYYY'); %></td>
                                     <td><%= moment(data[i].finish_date).format('Do MMMM, YYYY'); %></td>
                                     <td><%= data[i].amount_crab %></td>

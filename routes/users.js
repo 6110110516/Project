@@ -76,7 +76,7 @@ router.post('/check',(req, res, next) => {
   }
 })
 
-router.get('/listcrabinp', (req, res, next) => {
+router.get('/infoinp', (req, res, next) => {
   let pack_id = req.query.pack_id;
   dbCon.query('SELECT * FROM order_packaging WHERE pack_id = ?',pack_id, (err, rows) => {
       if (err) {
@@ -88,9 +88,33 @@ router.get('/listcrabinp', (req, res, next) => {
                   req.flash('error', err);
                   res.render('tagpackaging/listcrabinpack', {  data: rows , moment: moment});
               }else{
-                  res.render('tagpackaging/listcrabinpack', { data: rows , data_up: rows2, moment: moment});
+                  dbCon.query('SELECT * FROM info_list WHERE id = ?',rows[0].place_id, (err, rows3) => {
+                    if (err) {
+                        req.flash('error', err);
+                        res.render('tagpackaging/listcrabinpack', { data: rows , data_up: rows2, moment: moment});
+                    }else{
+                        res.render('tagpackaging/listcrabinpack', { data: rows , data_up: rows2,place: rows3[0].name_place, moment: moment});
+                        
+                    }
+                  });                  
               }
-          });        
+          });  
+
+      }
+  });
+})
+
+router.get('/infofarm', (req, res, next) => {
+  let id = req.query.id;
+
+  dbCon.query('SELECT * FROM info_list WHERE id = ?',id, (err, rows) => {
+      if (err) {
+          req.flash('error', err);
+          res.render('users/infofarm', { data: ''});
+      }else{
+      
+          res.render('users/infofarm', { data: rows });
+
       }
   });
 })
