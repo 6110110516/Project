@@ -23,7 +23,8 @@
         <div class="card-header">
             
             <ul class="nav nav-pills w-100">
-                <li class="nav-link">ข้อมูลแหล่งผลิต </li>
+                <li class="nav-link">ข้อมูลแหล่งผลิต <br>ปูนิ่ม</li>
+
                 <li class="nav-link ml-auto">
                     <a  href="/users"  class="btn btn-info">ค้นหาแพ็กเกจ</a>
                     <a  href="javascript:history.back()"  class="btn btn-info">Back</a>
@@ -68,7 +69,11 @@
 
                     <tr>
                         <th scope="row">ข้อมูลเพิ่มเติม</th>
-                        <td><%= data[0].description %></td>
+                        <% if(data[0].description == null) {%>
+                            <td> - </td>
+                        <%} else {%>
+                            <td><%= data[0].description %></td>
+                        <% } %>
                     </tr>
                     
                                         
