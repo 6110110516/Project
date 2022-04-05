@@ -15,8 +15,9 @@ const expiresTime = 1000 * 60 *15;
 app.use(session({
     secret: 'secret',
     resave: false,
-    // cookie: { maxAge: expiresTime },
-    saveUninitialized: true
+    cookie: { priority: 0 },
+    saveUninitialized: true,
+    // priority: 0
 
 }));
 
@@ -44,11 +45,13 @@ router.get('/login', function(req, res, next) {
     let backURL;
     if(req.session.loggedin){
         res.redirect('/data');
-    } else {
+    } else { 
+        
         if(req.query.backurl ){ 
             backURL = req.query.backurl;
             
         }else{
+           
             backURL = req.header('Referer') || '/';
         
         }
@@ -71,6 +74,7 @@ router.post('/auth', (req,res) => {
 
             if (results.length > 0) {
                 req.session.loggedin = true;
+                req.session.priority = results[0].priority;
                 req.session.username = username;
                 req.session.cookie.maxAge = expiresTime;
                 req.flash('success','Welcome back,'+req.session.username+'!');
@@ -102,6 +106,31 @@ router.get('/logout', (req, res) => {
     }    
     
 });
+
+router.get('/accounts', (req, res, next) => {
+    if(req.session.loggedin){
+        dbCon.query('SELECT * FROM accounts ORDER BY id DESC', (err, rows) => {
+            if (err) {
+                req.flash('error', err);
+                res.redirect('/data');
+            }else{
+                // console.log(req.session.priority);
+                if(req.session.priority == 0){
+                    req.flash('error', 'Your account not priority');
+                    res.redirect('/data');
+                } else if (req.session.priority == 1){
+                    res.render('tagpackaging/accounts', { data: rows }); 
+                } else {
+                    req.flash('error', 'Error');
+                    res.redirect('/data');
+                }
+                
+            }
+        });
+    }else {
+        res.redirect('/data/login?backurl=/data/accounts');
+    }
+})
 
 router.get('/add', (req, res, next) => {
     if(req.session.loggedin){
