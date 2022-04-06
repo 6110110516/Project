@@ -50,8 +50,25 @@ router.get('/', (req, res, next) => {
                         req.flash('error', err1);
                         res.render('tagpackaging/packagetag', { data: ''});
                     }else{
-                        res.render('tagpackaging/packagetag', { data: rows, data2: rows1 ,moment: moment});
-                        console.log(rows1);
+                        dbCon.query('SELECT COUNT(uid) AS count1 FROM tagnfc_packaging;', (err2, rows2) => {
+                            if (err2) {
+                                req.flash('error', err2);
+                                res.render('tagpackaging/packagetag', { data: rows, data2: rows1 ,moment: moment});
+                            }else{
+                                dbCon.query('SELECT COUNT(uid) AS count2 FROM tagnfc_packaging WHERE pack_id_temp <> "null"', (err3, rows3) => {
+                                    if (err3) {
+                                        req.flash('error', err3);
+                                        res.render('tagpackaging/packagetag', { data: rows, data2: rows1 ,moment: moment});
+                                    }else{
+                                        
+                                        res.render('tagpackaging/packagetag', { data: rows, data2: rows1, data3: rows2[0].count1, data4: rows3[0].count2, moment: moment});
+                                    }
+                                });
+                                
+                            }
+                        });
+                        
+                        // console.log(rows1);
                     }
                 })
             }
