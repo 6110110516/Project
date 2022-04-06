@@ -29,12 +29,16 @@
             <ul class="nav nav-pills w-100">
                 <li class="nav-link">List TagNFC</li>
                 <li class="nav-link ml-auto"> 
-                    <a href="../data %>" class="btn btn-success edit">Checks </a>
+                    <a href="../data %>" class="btn btn-success edit">Data </a>
                     <a href="/data/logout" class="btn btn-info">Sign out</a>
                 </li> 
             </ul>
         </div>
-        
+        <div class="card-header">
+            <li class="nav nav-pills w-100"> 
+                <a href="/data/createaccount" class="btn btn-info">Create account</a>
+            </li>
+        </div>
         <div class="card-body">
             <% if(data.length) { %>
                 <table class="table">
@@ -43,7 +47,8 @@
                             <!-- <th scope="col">#</th> -->
                             <th scope="col">username</th>
                             <th scope="col">priority</th>
-                            
+                            <th scope="col"></th>
+
                             <!-- <th width="400px"></th> -->
                         </tr>
                     </thead>
@@ -57,8 +62,8 @@
                                 <td> Keeper </td>
                                 <%} %> 
                                 <td>
-                                    <a href="../data/packagetagoption?uid=<%= data[i].uid %>" class="btn btn-success edit">Checks </a>
-                                    <a href="../data/deletepack?uid=<%= data[i].uid %>" onclick="return confirm('Are you sure?')" class="btn btn-danger delete">Delete</a>                                </td>
+                                   
+                                    <a href="../data/deleteacc?username=<%= data[i].username %>" onclick="return confirm('Are you sure?')" class="btn btn-danger delete">Delete</a>                                </td>
 
                             </tr>
                         <% } %>

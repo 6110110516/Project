@@ -132,6 +132,105 @@ router.get('/accounts', (req, res, next) => {
     }
 })
 
+router.get('/deleteacc', (req, res, next) => {
+    let username = req.query.username;
+    backURL=req.header('Referer') || '/';
+    if(req.session.loggedin){
+        if(req.session.priority == 0){
+            req.flash('error', 'Your account not priority');
+            res.redirect('/data');
+        } else if (req.session.priority == 1){
+            dbCon.query('DELETE FROM accounts WHERE username = ?',username, (err, rows) => {
+                if (err) {
+                    req.flash('error', err);
+                    res.redirect('/data/accounts');
+                }else{
+                    req.flash('success', 'account successfully deleted');
+                    res.redirect('/data/accounts');
+                }
+            });
+        } else {
+            req.flash('error', 'Error');ta
+            res.redirect('/data');
+        }
+            
+    }else {
+        res.redirect('/data/login?backurl='+backURL);
+
+    }    
+})
+
+router.get('/createaccount', (req, res, next) => {
+    if(req.session.loggedin){
+        console.log(req.session.username+"  loggedin");
+        console.log(req.session)
+    try {
+        if(req.session.priority == 0){
+            req.flash('error', 'Your account not priority');
+            res.redirect('/data');
+        } else if (req.session.priority == 1){
+            res.render('tagpackaging/createaccount')
+        } else {
+            req.flash('error', 'Error');
+            res.redirect('/data');
+        }
+        
+    } catch(e){
+        next(e);
+    }
+    }else {
+        
+        res.redirect('/data/login?backurl=/data/createaccount');
+    }
+})
+
+router.post('/createaccount', (req, res, next) => {
+    let username = req.body.username;
+    let password = req.body.password;
+    let cpassword = req.body.cpassword;
+
+    let errors = false;
+    let quertxt;
+    let directq;
+    if(req.session.loggedin){
+        quertxt = "INSERT INTO accounts SET username = '"+username+"', password = PASSWORD('"+password+"')";
+        directq = '/data/accounts';
+        
+        if (username.length == 0 || password.length == 0 || cpassword.length == 0 ) {
+            errors = true;
+            // set flash message
+            req.flash('error', 'กรอกข้อมูลให้ครบ');
+            // render to add.ejs with flash message
+            res.redirect('/data/createaccount');
+        }
+        else if(cpassword != password){
+            errors = true;
+            // set flash message
+            req.flash('error', 'รหัสผ่านไม่ตรงกัน');
+            // render to add.ejs with flash message
+            res.redirect('/data/createaccount');
+        }
+
+        // if no error
+        if (!errors) {
+
+            // insert query
+            dbCon.query(quertxt, (err, result) => {
+                if (err) {
+                    req.flash('error', err)
+                    res.redirect('/data/createaccount');
+
+                } else {
+                    req.flash('success', 'tagNFC successfully added');
+                    res.redirect(directq);
+                }
+            })
+        }
+    }else {
+        res.redirect('/data/login?backurl=/data/accounts');
+    }    
+})
+
 router.get('/add', (req, res, next) => {
     if(req.session.loggedin){
         console.log(req.session.username+"  loggedin");
