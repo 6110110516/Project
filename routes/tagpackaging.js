@@ -26,13 +26,34 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 router.get('/', (req, res, next) => {
+    let pack_id = [];
+    let i = 1;
     if(req.session.loggedin){
-        dbCon.query('SELECT * FROM tagnfc_packaging ORDER BY uid', (err, rows) => {
+        dbCon.query('SELECT * FROM tagnfc_packaging ORDER BY pack_id_temp DESC', (err, rows) => {
             if (err) {
                 req.flash('error', err);
                 res.render('tagpackaging/packagetag', { data: ''});
             }else{
-                res.render('tagpackaging/packagetag', { data: rows });
+                // console.log(rows)
+                Object.keys(rows).forEach(function(key) {
+                    if(rows[key].pack_id_temp == null)
+                        pack_id[key] = ''+i+++'';
+                    else
+                        pack_id[key] = ''+rows[key].pack_id_temp+'';
+
+                    });
+                console.log(pack_id);
+
+                sqlt = 'SELECT * FROM order_packaging WHERE pack_id IN ('+ pack_id +') ORDER BY pack_id DESC';
+                dbCon.query(sqlt, (err1, rows1) => {
+                    if (err1) {
+                        req.flash('error', err1);
+                        res.render('tagpackaging/packagetag', { data: ''});
+                    }else{
+                        res.render('tagpackaging/packagetag', { data: rows, data2: rows1 ,moment: moment});
+                        console.log(rows1);
+                    }
+                })
             }
         })
     }else {
@@ -116,7 +137,7 @@ router.get('/accounts', (req, res, next) => {
             }else{
                 // console.log(req.session.priority);
                 if(req.session.priority == 0){
-                    req.flash('error', 'Your account not priority');
+                    req.flash('error', 'Your account not permission');
                     res.redirect('/data');
                 } else if (req.session.priority == 1){
                     res.render('tagpackaging/accounts', { data: rows }); 
@@ -137,7 +158,7 @@ router.get('/deleteacc', (req, res, next) => {
     backURL=req.header('Referer') || '/';
     if(req.session.loggedin){
         if(req.session.priority == 0){
-            req.flash('error', 'Your account not priority');
+            req.flash('error', 'Your account not permission');
             res.redirect('/data');
         } else if (req.session.priority == 1){
             dbCon.query('DELETE FROM accounts WHERE username = ?',username, (err, rows) => {
@@ -166,7 +187,7 @@ router.get('/createaccount', (req, res, next) => {
         console.log(req.session)
     try {
         if(req.session.priority == 0){
-            req.flash('error', 'Your account not priority');
+            req.flash('error', 'Your account not permission');
             res.redirect('/data');
         } else if (req.session.priority == 1){
             res.render('tagpackaging/createaccount')

@@ -27,13 +27,20 @@
             <form action="/data/createaccount" method="post">
                 <div class="form-group">
                     <label>username: </label>
-                    <input type="text" style="width: 300px;" class="form-control" name="username" id="username" >
+                    <input type="text" style="width: 300px;" class="form-control" name="username" id="username" required>
                     <br>
                     <label>password: </label>
-                    <input type="password" style="width: 300px;" class="form-control" name="password" id="password" >
+                    <input type="password" style="width: 300px;" class="form-control" name="password" id="password" required>
                     <br>
                     <label>confirm password: </label>
-                    <input type="password" style="width: 300px;" class="form-control" name="cpassword" id="cpassword" >
+                    <input type="password" style="width: 300px;" class="form-control" name="cpassword" id="cpassword" required>
+                    <br>
+                    <label>select role: </label>
+                    <select class="form-control" style="width: 300px;" name="prio" id="prio" required>
+                        <option value="0">Keeper</option>
+                        <option value="1">Admin</option>
+
+                    </select>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-info" value="Create">
