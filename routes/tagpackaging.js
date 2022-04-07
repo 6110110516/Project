@@ -207,7 +207,7 @@ router.get('/createaccount', (req, res, next) => {
             req.flash('error', 'Your account not permission');
             res.redirect('/data');
         } else if (req.session.priority == 1){
-            res.render('tagpackaging/createaccount')
+            res.render('tagpackaging/createaccount');
         } else {
             req.flash('error', 'Error');
             res.redirect('/data');
@@ -226,12 +226,16 @@ router.post('/createaccount', (req, res, next) => {
     let username = req.body.username;
     let password = req.body.password;
     let cpassword = req.body.cpassword;
-
+    let role = req.body.prio;
     let errors = false;
     let quertxt;
     let directq;
+    
     if(req.session.loggedin){
-        quertxt = "INSERT INTO accounts SET username = '"+username+"', password = PASSWORD('"+password+"')";
+        if(role == 1)
+            quertxt = "INSERT INTO accounts SET username = '"+username+"', password = PASSWORD('"+password+"') ,priority = '1'";
+        else
+            quertxt = "INSERT INTO accounts SET username = '"+username+"', password = PASSWORD('"+password+"') ,priority = '0'";
         directq = '/data/accounts';
         
         if (username.length == 0 || password.length == 0 || cpassword.length == 0 ) {
@@ -251,18 +255,26 @@ router.post('/createaccount', (req, res, next) => {
 
         // if no error
         if (!errors) {
+            if(req.session.priority == 0){
+                req.flash('error', 'Your account not permission');
+                res.redirect('/data');
+            } else if (req.session.priority == 1){
+                // insert query
+                dbCon.query(quertxt, (err, result) => {
+                    if (err) {
+                        req.flash('error', err)
+                        res.redirect('/data/createaccount');
 
-            // insert query
-            dbCon.query(quertxt, (err, result) => {
-                if (err) {
-                    req.flash('error', err)
-                    res.redirect('/data/createaccount');
-
-                } else {
-                    req.flash('success', 'tagNFC successfully added');
-                    res.redirect(directq);
-                }
-            })
+                    } else {
+                        req.flash('success', 'tagNFC successfully added');
+                        res.redirect(directq);
+                    }
+                })
+            } else {
+                req.flash('error', 'Error');
+                res.redirect('/data');
+            }
+                
         }
     }else {
         res.redirect('/data/login?backurl=/data/accounts');
@@ -346,7 +358,6 @@ router.get('/listpack', (req, res, next) => {
         res.redirect('/data/login?backurl=/data/listpack');
     }
 })
-
 
 router.get('/deletepack', (req, res, next) => {
     let uid = req.query.uid;
@@ -903,6 +914,20 @@ router.post('/updata', (req, res, next) => {
     }
 })  
 
+router.get('/listfarm', (req, res, next) => {
+    if(req.session.loggedin){
+        dbCon.query('SELECT * FROM info_list ORDER BY id DESC', (err, rows) => {
+            if (err) {
+                req.flash('error', err);
+                res.render('tagpackaging/listfarm', { data: ''});
+            }else{
+                res.render('tagpackaging/listfarm', { data: rows });
+            }
+        });
+    }else {
+        res.redirect('/data/login?backurl=/data/listfarm');
+    }
+})
 
 
 module.exports = router;

@@ -35,6 +35,7 @@
             <ul class="nav nav-pills w-100">
                 <li class="nav-link">List TagNFC</li>
                 <li class="nav-link ml-auto"> 
+                    <a href="/data/listfarm" class="btn btn-success">Farm</a>
                     <a href="/data/accounts" class="btn btn-success">Accounts</a>
                     <a href="/data/logout" class="btn btn-info">Sign out</a>
                 </li> 
@@ -44,11 +45,17 @@
         <div class="card-body">
             <div class="class1" >
                 <li class="nav nav-pills w-100"> 
-                    <a><%= data3 %></a>
-                    <br>
-                    <a><%= data4 %></a>
-                    
-                    <a href="/data/createaccount" class="btn btn-info">Create account</a>
+                    <thead>
+                        <tr>
+                            <!-- <th scope="col">#</th> -->
+                            <th scope="col">แท็กทั้งหมดในระบบ :<%= data3 %></th>
+                            <br>
+                            <th scope="col">แท็กที่กำลังใช้งาน :<%= data4 %></th>
+                            <th scope="col">แท็กที่ว่าง :<%= data3-data4 %></th>
+                            <th scope="col"></th>
+                            <!-- <th width="400px"></th> -->
+                        </tr>
+                    </thead>
                 </li>
             </div>
             <% if(data.length) { %>
