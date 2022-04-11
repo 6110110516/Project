@@ -141,12 +141,10 @@
                             <label>สถานที่เลี้ยง</label>
                             <br>
                             <select class="form-control" name="place" id="place">
-                                <option value="0">ศูนย์วิจัยสุขภาพสัตว์น้ำ กิจการ ศุภมาตย์</option>
-                                <!-- <option value="place1">place1</option>
-                                <option value="place2">place2</option>
-                                <option value="place3">place3</option> -->
-                              </select>
-                            <!-- <input type="text" class="form-control" id="place" name="place" value="มหาวิทยาลัยสงขลานครินทร์">   -->
+                                <% for(i=0;i< place_list.length; i++) {%>
+                                    <option value="<%= place_list[i].id %>"> <%= place_list[i].name_place %> </option>
+                                <% } %>    
+                            </select>
                             <br>
                             <input type="submit"  onclick="return confirm('Are you sure?')" class="btn btn-info" value="เริ่มใช้งาน">
                         </div>

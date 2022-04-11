@@ -26,6 +26,7 @@
             <ul class="nav nav-pills w-100">
                 <li class="nav-link">Farm list</li>
                 <li class="nav-link ml-auto"> 
+                    <a href="/data/createfarm" class="btn btn-success">Create farm</a>
                     <a href="/data/logout" class="btn btn-info">Sign out</a>
                 </li> 
             </ul>
@@ -38,9 +39,11 @@
                         <tr>
                             <!-- <th scope="col">#</th> -->
                             
-                            <th scope="col">ID farm </th>
+                            
                             <th scope="col">ชื่อสถานที่ </th>
+                            
                             <th scope="col"> </th>
+
                             
                             <!-- <th scope="col">status</th> -->
                             <!-- <th width="400px"></th> -->
@@ -49,10 +52,11 @@
                     <tbody>
                         <% for(let i = 0; i < data.length; i++) { %>
                             <tr>
-                                <th  scope="row"><a ><%= data[i].id %></a></th>
-                                <td><%= data[i].name_place %></td>
+                                
+                                <td scope="row"><%= data[i].name_place %></td>
+                               
                                 <td>
-                                <a href="../data/packagetagoption?uid=<%= data[i].uid %>" class="btn btn-success edit">Checks </a>
+                                <a href="../data/editfarm?id=<%= data[i].id %>" class="btn btn-success edit">edit </a>
                                 </td>
                                 
                             </tr>

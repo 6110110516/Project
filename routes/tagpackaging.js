@@ -50,7 +50,7 @@ router.get('/', (req, res, next) => {
                         req.flash('error', err1);
                         res.render('tagpackaging/packagetag', { data: ''});
                     }else{
-                        dbCon.query('SELECT COUNT(uid) AS count1 FROM tagnfc_packaging;', (err2, rows2) => {
+                        dbCon.query('SELECT COUNT(uid) AS count1 FROM tagnfc_packaging', (err2, rows2) => {
                             if (err2) {
                                 req.flash('error', err2);
                                 res.render('tagpackaging/packagetag', { data: rows, data2: rows1 ,moment: moment});
@@ -108,21 +108,24 @@ router.post('/auth', (req,res) => {
     let sqlt = 'SELECT * FROM accounts WHERE username = "'+username+'" AND password = PASSWORD("'+password+'")';
     if (username && password) {
         dbCon.query(sqlt , (err, results, fields) => {
-            console.log(results[0].username);
-
-            if (results.length > 0) {
-                req.session.loggedin = true;
-                req.session.priority = results[0].priority;
-                req.session.username = username;
-                req.session.cookie.maxAge = expiresTime;
-                req.flash('success','Welcome back,'+req.session.username+'!');
-                res.redirect(backURL);
-            }else{
-                console.log("Incorrect");
-                req.flash('error','Incorrect Username or Password');
-                res.redirect('/data/login?backurl='+backURL);
-            }
             
+                if (err) {
+                    req.flash('error', err);
+                    res.redirect('/data');
+                }else{
+                    if (results.length > 0) {
+                        req.session.loggedin = true;
+                        req.session.priority = results[0].priority;
+                        req.session.username = username;
+                        req.session.cookie.maxAge = expiresTime;
+                        req.flash('success','Welcome back,'+req.session.username+'!');
+                        res.redirect(backURL);
+                    }else{
+                        console.log("Incorrect");
+                        req.flash('error','Incorrect Username or Password');
+                        res.redirect('/data/login?backurl='+backURL);
+                    }
+                }
         });
     }else {
         
@@ -554,7 +557,17 @@ router.get('/packagetagoption', (req, res, next) => {
                     else
                 
                         if(pack_id == null){
-                            res.render('scantag/packagetagoption', { uid: uid,data: rows});
+                            console.log("No data");
+                            dbCon.query('SELECT * FROM info_list ORDER BY id', (err1, rows1) => {
+                                if (err1) {
+                                    req.flash('error', err1);
+                                    res.render('scantag/packagetagoption', { uid: uid, data: rows });
+                                }else{
+                                    res.render('scantag/packagetagoption', { uid: uid, data: rows, place_list: rows1});
+                                    
+                                }
+                              });
+                            
                         }
                         else
                             dbCon.query('SELECT * FROM update_status WHERE pack_id = ? ORDER BY num',pack_id, (err2, rows2) => {
@@ -563,13 +576,18 @@ router.get('/packagetagoption', (req, res, next) => {
                                     res.redirect('/data');
                                 }else{
                                     // console.log(rows2[0].timestamp);
-                                    dbCon.query('SELECT * FROM info_list WHERE id = ?',rows[0].place_id, (err, rows3) => {
-                                        if (err) {
-                                            req.flash('error', err);
+                                    console.log(rows[0].place_id)
+                                    dbCon.query('SELECT * FROM info_list WHERE id = ?',rows[0].place_id, (err3, rows3) => {
+                                        if (err3) {
+                                            req.flash('error', err3);
+                                           
                                             res.render('scantag/packagetagoption', { data: rows , data_up: rows2, moment: moment});
                                         }else{
-                                            res.render('scantag/packagetagoption', { uid: uid,data: rows , data_up: rows2 ,place: rows3[0].name_place, moment: moment});
-                                            
+                                            if(rows3 == null)
+                                                res.render('scantag/packagetagoption', { uid: uid,data: rows , data_up: rows2 ,place: "-", moment: moment});
+                                            else{
+                                                res.render('scantag/packagetagoption', { uid: uid,data: rows , data_up: rows2 ,place: rows3[0].name_place, moment: moment});
+                                            }
                                   
                                         }
                                       });
@@ -915,19 +933,184 @@ router.post('/updata', (req, res, next) => {
 })  
 
 router.get('/listfarm', (req, res, next) => {
+    
     if(req.session.loggedin){
+        //sqlt = 'SELECT place_id,COUNT(*) AS count FROM order_packaging WHERE place_id IN ('+ farm_id +') GROUP BY place_id ORDER BY place_id DESC;';
         dbCon.query('SELECT * FROM info_list ORDER BY id DESC', (err, rows) => {
-            if (err) {
-                req.flash('error', err);
-                res.render('tagpackaging/listfarm', { data: ''});
-            }else{
-                res.render('tagpackaging/listfarm', { data: rows });
-            }
-        });
+
+            
+                    if (err) {
+                        req.flash('error', err);
+                        res.render('tagpackaging/listfarm', { data: rows });
+
+                    }else{
+                        res.render('tagpackaging/listfarm', { data: rows});
+                    }
+                });
+                
+            
+        
     }else {
         res.redirect('/data/login?backurl=/data/listfarm');
     }
 })
 
+router.get('/editfarm', (req, res, next) => {
+    let farm_id = req.query.id;
+    if(req.session.loggedin){
+        //sqlt = 'SELECT place_id,COUNT(*) AS count FROM order_packaging WHERE place_id IN ('+ farm_id +') GROUP BY place_id ORDER BY place_id DESC;';
+        if(farm_id == null){
+            res.redirect('/data/listfarm');
+        }
+        dbCon.query('SELECT * FROM info_list WHERE id = ?',farm_id, (err, rows) => {
+
+            
+                    if (err) {
+                        req.flash('error', err);
+                        res.render('tagpackaging/listfarm', { data: rows });
+
+                    }else{
+                        res.render('tagpackaging/editfarm', { data: rows});
+                    }
+                });
+                
+            
+        
+    }else {
+        res.redirect('/data/login?backurl=/data/editfarm');
+    }
+})
+
+router.get('/createfarm', (req, res, next) => {
+    if(req.session.loggedin){
+        // console.log(req.session.username+"  loggedin");
+        // console.log(req.session)
+    try {
+        
+        res.render('tagpackaging/createfarm');
+        
+        
+    } catch(e){
+        next(e);
+    }
+    }else {
+        
+        res.redirect('/data/login?backurl=/data/createfarm');
+    }
+})
+
+router.post('/editfarm', (req, res, next) => {
+    let id = req.query.id;
+    let name_place = req.body.name_place;
+    let address = req.body.address;
+    let crab_info = req.body.crab_info;
+    let crab_info2 = req.body.crab_info2;
+    let description = req.body.description;
+    let errors = false;
+    let quertxt;
+    let directq;
+    
+    if(req.session.loggedin){
+        
+        quertxt = 'UPDATE info_list SET name_place = "'+name_place+'", address = "'+address+'", crab_info = "'+crab_info+'", crab_info2 = "'+crab_info2+'" ,description = "'+description+'" WHERE id = "'+id+'" ';
+        
+        directq = '/data/listfarm';
+        
+        if (name_place.length == 0 ) {
+            errors = true;
+            // set flash message
+            req.flash('error', 'กรอกข้อมูลให้ครบ');
+            // render to add.ejs with flash message
+            res.redirect('/data/editfarm?id='+id);
+        }else if(id == null){
+            errors = true;
+            res.redirect('/data/listfarm');
+        }
+        
+        // if no error
+        if (!errors) {
+           
+                // insert query
+                dbCon.query(quertxt, (err, result) => {
+                    if (err) {
+                        req.flash('error', err)
+                        console.log('error : '+err)
+                        res.redirect('/data/editfarm?id='+id);
+
+                    } else {
+                        req.flash('success', 'Farm successfully edit');
+                        res.redirect(directq);
+                    }
+                })
+                            
+        }
+    }else {
+        res.redirect('/data/login?backurl=/data/editfarm');
+    }    
+})
+
+router.get('/deletefarm', (req, res, next) => {
+    let id = req.query.id;
+    backURL=req.header('Referer') || '/';
+    if(req.session.loggedin){
+        dbCon.query('DELETE FROM info_list WHERE id = ?',id, (err, rows) => {
+            if (err) {
+                req.flash('error', err);
+                res.redirect('/data/listfarm');
+            }else{
+                req.flash('success', 'ลบแล้ว');
+                res.redirect('/data/listfarm');   
+            }
+        });
+    }else {
+        res.redirect('/data/login?backurl='+backURL);
+    }
+})
+
+router.post('/createfarm', (req, res, next) => {
+    let name_place = req.body.name_place;
+    let address = req.body.address;
+    let crab_info = req.body.crab_info;
+    let crab_info2 = req.body.crab_info2;
+    let description = req.body.description;
+    let errors = false;
+    let quertxt;
+    let directq;
+    
+    if(req.session.loggedin){
+        
+        quertxt = 'INSERT INTO info_list SET name_place = "'+name_place+'", address = "'+address+'", crab_info = "'+crab_info+'", crab_info2 = "'+crab_info2+'" ,description = "'+description+'" ';
+        
+        directq = '/data/listfarm';
+        
+        if (name_place.length == 0 ) {
+            errors = true;
+            // set flash message
+            req.flash('error', 'กรอกข้อมูลให้ครบ');
+            // render to add.ejs with flash message
+            res.redirect('/data/createfarm');
+        }
+        
+        // if no error
+        if (!errors) {
+           
+                // insert query
+                dbCon.query(quertxt, (err, result) => {
+                    if (err) {
+                        req.flash('error', err)
+                        console.log('error : '+err)
+                        res.redirect('/data/createfarm');
+
+                    } else {
+                        req.flash('success', 'Farm successfully added');
+                        res.redirect(directq);
+                    }
+                })
+                            
+        }
+    }else {
+        res.redirect('/data/login?backurl=/data/createfarm');
+    }    
+})
 
 module.exports = router;
