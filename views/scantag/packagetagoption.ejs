@@ -119,12 +119,7 @@
                             <a href="../data/packagetagoption/edit?uid=<%= data[0].uid %>&pack_id=<%= data[0].pack_id %>" class="btn btn-success ">Edit</a>
                         </li>
                     <% } %>
-                    <% if(data[0].statu == 1) { %>
-                        <li class="nav-link">
-                            <a href="../data/listordering?pack_id=<%= data[0].pack_id %>" class="btn btn-warning ">กดเพิ่มลงออเดอร์</a>
-                        </li>
-                    <% } else {%>
-                        <% } %>
+                    
                 <li class="nav-link">
                     <a href="../data/deletepacklist?pack_id=<%= data[0].pack_id %>" onclick="return confirm('Are you sure?')" class="btn btn-danger delete">Delete</a>
                 </li>
@@ -133,7 +128,7 @@
                     <form action="/data/packstart?uid=<%= uid %>" method="post"  >           
                         <div class="form-grup">
                             <label>กรอกจำนวนปู</label>
-                            <input type="number" class="form-control" id="amount" name="amount" >  
+                            <input type="number" class="form-control" id="amount" name="amount" required min="0">  
                             <br>   
                             <label>วันที่ลอกคราบ</label>
                             <input type="date" class="form-control" id="date_molt" name="date_molt" >  

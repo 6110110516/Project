@@ -87,7 +87,7 @@
                                 <% }%>  
                                 <td>
                                     <a href="../data/packagetagoption?uid=<%= data[i].uid %>" class="btn btn-success edit">Checks </a>
-                                    <a href="../data/deletepack?uid=<%= data[i].uid %>" onclick="return confirm('Are you sure?')" class="btn btn-danger delete">Delete</a>                                </td>
+                                    <a href="../data/deletepack?uid=<%= data[i].uid %>&pack_id=<%= data[i].pack_id_temp %>" onclick="return confirm('Are you sure?')" class="btn btn-danger delete">Delete</a>                                </td>
 
                             </tr>
                         <% } %>

@@ -96,7 +96,7 @@ router.get('/login', function(req, res, next) {
         console.log(backURL);
         res.render('login',{backURL: backURL});
     }
-  });
+});
 
 router.post('/auth', (req,res) => {
     var username = req.body.username;
@@ -265,7 +265,7 @@ router.post('/createaccount', (req, res, next) => {
                 // insert query
                 dbCon.query(quertxt, (err, result) => {
                     if (err) {
-                        req.flash('error', err)
+                        req.flash('error', 'ชื่อผู้ใช้มีการใช้งานแล้ว')
                         res.redirect('/data/createaccount');
 
                     } else {
@@ -364,17 +364,22 @@ router.get('/listpack', (req, res, next) => {
 
 router.get('/deletepack', (req, res, next) => {
     let uid = req.query.uid;
+    let pack_id = req.query.pack_id;
+
     backURL=req.header('Referer') || '/';
-    if(req.session.loggedin){
-        dbCon.query('DELETE FROM tagnfc_packaging WHERE uid = ?',uid, (err, rows) => {
-            if (err) {
-                req.flash('error', err);
-                res.redirect('/data');
-            }else{
-                req.flash('success', 'tagNFC successfully deleted');
-                res.redirect('/packagetagoption');
-            }
-        });
+    if(req.session.loggedin){ 
+                
+                    dbCon.query('DELETE FROM tagnfc_packaging WHERE uid = ?',uid, (err2, rows) => {
+                        if (err2) {
+                            req.flash('error', 'ข้อมูลผิดพลาด');
+                            console.log(err2);
+                            res.redirect('/data');
+                        }else{
+                            req.flash('success', 'tagNFC successfully deleted');
+                            res.redirect('/data');
+                        }
+                    });  
+            
     }else {
         res.redirect('/data/login?backurl='+backURL);
 
@@ -758,6 +763,7 @@ router.post('/crabstart', (req, res, next) => {//
 router.post('/packstart', (req, res, next) => {
     let uid = req.query.uid;
     let amount = req.body.amount
+    
     let place = req.body.place
     let date_molt = req.body.date_molt
     let pack_id;
@@ -775,7 +781,7 @@ router.post('/packstart', (req, res, next) => {
                 if (err) {
                     console.log(err);
                     req.flash('error', err);
-                    res.render('scantag/packagetagoption', { uid: uid});
+                    res.redirect('/data/packagetagoption?uid='+uid);
                 }
                 else{
                     // res.redirect('/data/crabupdate?uid='+uid);
@@ -786,7 +792,7 @@ router.post('/packstart', (req, res, next) => {
 
                             console.log(err1);
                             req.flash('error', err1);
-                            res.render('scantag/packagetagoption', { uid: uid});
+                            res.redirect('/data/packagetagoption?uid='+uid);
                         }
                         else{
                             let sqltext = 'INSERT INTO update_status SET pack_id = '+pack_id+', update_pack = "เริ่มใช้งาน", timestamp = "'+start_date+'"'
@@ -948,8 +954,6 @@ router.get('/listfarm', (req, res, next) => {
                     }
                 });
                 
-            
-        
     }else {
         res.redirect('/data/login?backurl=/data/listfarm');
     }
@@ -1097,7 +1101,7 @@ router.post('/createfarm', (req, res, next) => {
                 // insert query
                 dbCon.query(quertxt, (err, result) => {
                     if (err) {
-                        req.flash('error', err)
+                        req.flash('error', 'ชื่อฟาร์มมีการใช้งานแล้ว')
                         console.log('error : '+err)
                         res.redirect('/data/createfarm');
 
